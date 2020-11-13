@@ -1,15 +1,20 @@
+"use strict";
 /*
  * Copyright 2020 Marek Kobida
  */
-import http from 'http';
-import Application from './Application';
-class TestApplication extends Application {
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const http_1 = __importDefault(require("http"));
+const Application_1 = __importDefault(require("./Application"));
+class TestApplication extends Application_1.default {
     constructor() {
         super('Testovacia aplikácia, ktorá po pridaní vytvorí HTTP server.', 'http://127.0.0.1:8080', 'TestApplication', '1.0.0');
         this.sockets = new Set();
     }
     afterAdd() {
-        const server = http.createServer((request, response) => {
+        const server = http_1.default.createServer((request, response) => {
             response.setHeader('Content-Type', 'application/json');
             return response.end(JSON.stringify(this.toJSON()));
         });
@@ -32,4 +37,4 @@ class TestApplication extends Application {
         this.server?.close();
     }
 }
-export default TestApplication;
+exports.default = TestApplication;

@@ -1,6 +1,8 @@
+"use strict";
 /*
  * Copyright 2020 Marek Kobida
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 class Application {
     constructor(description, htmlFileUrl, name, version) {
         this.description = description;
@@ -38,4 +40,4 @@ class Application {
         };
     }
 }
-export default Application;
+exports.default = Application;
