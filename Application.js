@@ -21,19 +21,19 @@ class Application {
                 this.afterAdd();
             }
             if (serverIPCMessage.name === 'DELETE') {
-                this.afterDelete();
-                /* ---------------------------------------------------------------- */
                 this.sendIPCMessage({
                     application: this.toJSON(),
                     name: 'AFTER_DELETE',
                 });
+                /* ---------------------------------------------------------------- */
+                this.httpServer.close();
                 /* ---------------------------------------------------------------- */
                 this.httpServerSockets.forEach(socket => {
                     socket.destroy();
                     this.httpServerSockets.delete(socket);
                 });
                 /* ---------------------------------------------------------------- */
-                this.httpServer.close();
+                this.afterDelete();
             }
         });
         /* ---------------------------------------------------------------- */

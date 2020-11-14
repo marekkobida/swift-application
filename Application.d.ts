@@ -18,8 +18,8 @@ declare class Application {
     constructor(description: string, htmlFileUrl: string, name: string, version: string);
     afterAdd(): void;
     afterDelete(): void;
-    createHttpServer(): http.Server;
-    httpServerUrl(): string;
+    private createHttpServer;
+    private httpServerUrl;
     sendIPCMessage(clientIPCMessage: ClientIPCMessage): void;
     toJSON(): {
         description: string;
@@ -28,6 +28,6 @@ declare class Application {
         name: string;
         version: string;
     };
-    updateHtmlFileUrl(): string;
+    private updateHtmlFileUrl;
 }
 export default Application;
