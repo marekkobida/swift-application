@@ -1,3 +1,6 @@
+/// <reference types="node" />
+import http from 'http';
+import net from 'net';
 export interface ClientIPCMessage {
     application: ReturnType<Application['toJSON']>;
     name: 'ADD' | 'AFTER_DELETE';
@@ -10,15 +13,20 @@ declare class Application {
     readonly htmlFileUrl: string;
     readonly name: string;
     readonly version: string;
+    httpServer: http.Server;
+    httpServerSockets: Set<net.Socket>;
     constructor(description: string, htmlFileUrl: string, name: string, version: string);
     afterAdd(): void;
     afterDelete(): void;
+    httpServerUrl(): string;
     sendIPCMessage(clientIPCMessage: ClientIPCMessage): void;
     toJSON(): {
         description: string;
         htmlFileUrl: string;
+        httpServerUrl: string;
         name: string;
         version: string;
     };
+    updateHtmlFileUrl(): string;
 }
 export default Application;

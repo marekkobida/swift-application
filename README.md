@@ -11,7 +11,19 @@
     <title>TestApplication</title>
   </head>
   <body>
-    TestApplication
+    <h1>TestApplication</h1>
+    <p id="httpServerUrl"></p>
+    <script>
+      const url = new URL(window.location.href);
+
+      const httpServerUrlFromUrlSearchParameters = url.searchParams.get(
+        'httpServerUrl',
+      );
+
+      document.getElementById(
+        'httpServerUrl',
+      ).innerHTML = httpServerUrlFromUrlSearchParameters;
+    </script>
   </body>
 </html>
 ```
@@ -26,7 +38,7 @@ const Application = require('@swift/application/Application');
 class TestApplication extends Application.default {
   constructor() {
     super(
-      'TestApplication',
+      'Testovacia aplikácia, ktorá po pridaní vytvorí HTTP server.',
       `file://${path.resolve(__dirname, './TestApplication.html')}`,
       'TestApplication',
       '1.0.0',
@@ -34,11 +46,13 @@ class TestApplication extends Application.default {
   }
 
   afterAdd() {
-    console.log('afterAdd');
-  }
+    super.afterAdd();
 
-  afterDelete() {
-    console.log('afterDelete');
+    this.httpServer.on('request', (request, response) => {
+      response.setHeader('Content-Type', 'application/json');
+
+      return response.end(JSON.stringify(this.toJSON()));
+    });
   }
 }
 

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TestApplication</title>
+  </head>
+  <body>
+    <h1>TestApplication</h1>
+    <p id="httpServerUrl"></p>
+    <script>
+      const url = new URL(window.location.href);
+
+      const httpServerUrlFromUrlSearchParameters = url.searchParams.get(
+        'httpServerUrl',
+      );
+
+      document.getElementById(
+        'httpServerUrl',
+      ).innerHTML = httpServerUrlFromUrlSearchParameters;
+    </script>
+  </body>
+</html>
