@@ -2,6 +2,8 @@
  * Copyright 2020 Marek Kobida
  */
 
+import './TestApplication.html';
+
 import path from 'path';
 
 import Application from './Application';
