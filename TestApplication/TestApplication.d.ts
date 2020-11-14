@@ -1,4 +1,3 @@
-import './client.html';
 import Application from '../Application';
 declare class TestApplication extends Application {
     constructor();
