@@ -19,8 +19,6 @@ class TestApplication extends Application {
   }
 
   afterAdd() {
-    super.afterAdd();
-
     this.httpServer.on('request', (request, response) => {
       response.setHeader('Content-Type', 'application/json');
 

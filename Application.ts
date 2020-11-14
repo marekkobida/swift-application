@@ -25,6 +25,52 @@ class Application {
     readonly name: string,
     readonly version: string,
   ) {
+    this.httpServer = this.createHttpServer();
+
+    /* ---------------------------------------------------------------- */
+
+    process.on('message', (serverIPCMessage: ServerIPCMessage) => {
+      if (serverIPCMessage.name === 'AFTER_ADD') {
+        this.afterAdd();
+      }
+
+      if (serverIPCMessage.name === 'DELETE') {
+        this.afterDelete();
+
+        /* ---------------------------------------------------------------- */
+
+        this.sendIPCMessage({
+          application: this.toJSON(),
+          name: 'AFTER_DELETE',
+        });
+
+        /* ---------------------------------------------------------------- */
+
+        this.httpServerSockets.forEach(socket => {
+          socket.destroy();
+
+          this.httpServerSockets.delete(socket);
+        });
+
+        /* ---------------------------------------------------------------- */
+
+        this.httpServer.close();
+      }
+    });
+
+    /* ---------------------------------------------------------------- */
+
+    this.sendIPCMessage({
+      application: this.toJSON(),
+      name: 'ADD',
+    });
+  }
+
+  afterAdd() {}
+
+  afterDelete() {}
+
+  createHttpServer() {
     const httpServer = http.createServer();
 
     /* ---------------------------------------------------------------- */
@@ -37,51 +83,11 @@ class Application {
 
     /* ---------------------------------------------------------------- */
 
-    this.httpServer = httpServer;
+    httpServer.listen();
 
     /* ---------------------------------------------------------------- */
 
-    process.on('message', (serverIPCMessage: ServerIPCMessage) => {
-      if (serverIPCMessage.name === 'AFTER_ADD') {
-        this.afterAdd();
-      }
-
-      if (serverIPCMessage.name === 'DELETE') {
-        this.afterDelete();
-      }
-    });
-
-    /* ---------------------------------------------------------------- */
-
-    this.httpServer.listen();
-
-    /* ---------------------------------------------------------------- */
-
-    this.sendIPCMessage({
-      application: this.toJSON(),
-      name: 'ADD',
-    });
-  }
-
-  afterAdd() {}
-
-  afterDelete() {
-    this.sendIPCMessage({
-      application: this.toJSON(),
-      name: 'AFTER_DELETE',
-    });
-
-    /* ---------------------------------------------------------------- */
-
-    this.httpServerSockets.forEach(socket => {
-      socket.destroy();
-
-      this.httpServerSockets.delete(socket);
-    });
-
-    /* ---------------------------------------------------------------- */
-
-    this.httpServer.close();
+    return httpServer;
   }
 
   httpServerUrl(): string {
@@ -106,7 +112,7 @@ class Application {
     };
   }
 
-  updateHtmlFileUrl() {
+  updateHtmlFileUrl(): string {
     const htmlFileUrl = new URL(this.htmlFileUrl);
 
     htmlFileUrl.searchParams.set('httpServerUrl', this.httpServerUrl());

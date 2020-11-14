@@ -18,6 +18,7 @@ declare class Application {
     constructor(description: string, htmlFileUrl: string, name: string, version: string);
     afterAdd(): void;
     afterDelete(): void;
+    createHttpServer(): http.Server;
     httpServerUrl(): string;
     sendIPCMessage(clientIPCMessage: ClientIPCMessage): void;
     toJSON(): {

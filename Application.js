@@ -14,14 +14,7 @@ class Application {
         this.name = name;
         this.version = version;
         this.httpServerSockets = new Set();
-        const httpServer = http_1.default.createServer();
-        /* ---------------------------------------------------------------- */
-        httpServer.on('connection', socket => {
-            this.httpServerSockets.add(socket);
-            httpServer.once('close', () => this.httpServerSockets.delete(socket));
-        });
-        /* ---------------------------------------------------------------- */
-        this.httpServer = httpServer;
+        this.httpServer = this.createHttpServer();
         /* ---------------------------------------------------------------- */
         process.on('message', (serverIPCMessage) => {
             if (serverIPCMessage.name === 'AFTER_ADD') {
@@ -29,10 +22,20 @@ class Application {
             }
             if (serverIPCMessage.name === 'DELETE') {
                 this.afterDelete();
+                /* ---------------------------------------------------------------- */
+                this.sendIPCMessage({
+                    application: this.toJSON(),
+                    name: 'AFTER_DELETE',
+                });
+                /* ---------------------------------------------------------------- */
+                this.httpServerSockets.forEach(socket => {
+                    socket.destroy();
+                    this.httpServerSockets.delete(socket);
+                });
+                /* ---------------------------------------------------------------- */
+                this.httpServer.close();
             }
         });
-        /* ---------------------------------------------------------------- */
-        this.httpServer.listen();
         /* ---------------------------------------------------------------- */
         this.sendIPCMessage({
             application: this.toJSON(),
@@ -40,18 +43,18 @@ class Application {
         });
     }
     afterAdd() { }
-    afterDelete() {
-        this.sendIPCMessage({
-            application: this.toJSON(),
-            name: 'AFTER_DELETE',
+    afterDelete() { }
+    createHttpServer() {
+        const httpServer = http_1.default.createServer();
+        /* ---------------------------------------------------------------- */
+        httpServer.on('connection', socket => {
+            this.httpServerSockets.add(socket);
+            httpServer.once('close', () => this.httpServerSockets.delete(socket));
         });
         /* ---------------------------------------------------------------- */
-        this.httpServerSockets.forEach(socket => {
-            socket.destroy();
-            this.httpServerSockets.delete(socket);
-        });
+        httpServer.listen();
         /* ---------------------------------------------------------------- */
-        this.httpServer.close();
+        return httpServer;
     }
     httpServerUrl() {
         const $ = this.httpServer.address();
