@@ -1,4 +1,4 @@
-```
+```js
 const Application = require('@swift/application/Application').default;
 
 class TestApplication extends Application {
