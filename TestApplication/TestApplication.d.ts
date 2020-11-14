@@ -1,5 +1,5 @@
-import './index.html';
-import Application from './Application';
+import './client.html';
+import Application from '../Application';
 declare class TestApplication extends Application {
     constructor();
     afterAdd(): void;
