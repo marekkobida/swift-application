@@ -35,14 +35,14 @@ class Application {
       }
 
       if (serverIPCMessage.name === 'DELETE') {
-        this.afterDelete();
-
-        /* ---------------------------------------------------------------- */
-
         this.sendIPCMessage({
           application: this.toJSON(),
           name: 'AFTER_DELETE',
         });
+
+        /* ---------------------------------------------------------------- */
+
+        this.httpServer.close();
 
         /* ---------------------------------------------------------------- */
 
@@ -54,7 +54,7 @@ class Application {
 
         /* ---------------------------------------------------------------- */
 
-        this.httpServer.close();
+        this.afterDelete();
       }
     });
 
@@ -70,7 +70,7 @@ class Application {
 
   afterDelete() {}
 
-  createHttpServer() {
+  private createHttpServer() {
     const httpServer = http.createServer();
 
     /* ---------------------------------------------------------------- */
@@ -90,7 +90,7 @@ class Application {
     return httpServer;
   }
 
-  httpServerUrl(): string {
+  private httpServerUrl(): string {
     const $ = this.httpServer.address();
 
     return $ !== null && typeof $ === 'object'
@@ -112,7 +112,7 @@ class Application {
     };
   }
 
-  updateHtmlFileUrl(): string {
+  private updateHtmlFileUrl(): string {
     const htmlFileUrl = new URL(this.htmlFileUrl);
 
     htmlFileUrl.searchParams.set('httpServerUrl', this.httpServerUrl());
