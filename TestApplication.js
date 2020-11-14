@@ -8,7 +8,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require("./index.html");
 const path_1 = __importDefault(require("path"));
-const Application_1 = __importDefault(require("../Application"));
+const Application_1 = __importDefault(require("./Application"));
 class TestApplication extends Application_1.default {
     constructor() {
         super('Testovacia aplikácia, ktorá po pridaní vytvorí HTTP server.', `file://${path_1.default.resolve(__dirname, './index.html')}`, 'TestApplication', '1.0.0');

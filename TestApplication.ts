@@ -2,17 +2,17 @@
  * Copyright 2020 Marek Kobida
  */
 
-import './index.html';
+import './TestApplication.html';
 
 import path from 'path';
 
-import Application from '../Application';
+import Application from './Application';
 
 class TestApplication extends Application {
   constructor() {
     super(
       'Testovacia aplikácia, ktorá po pridaní vytvorí HTTP server.',
-      `file://${path.resolve(__dirname, './index.html')}`,
+      `file://${path.resolve(__dirname, './TestApplication.html')}`,
       'TestApplication',
       '1.0.0',
     );
