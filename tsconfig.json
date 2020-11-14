@@ -4,10 +4,9 @@
     "declaration": true,
     "esModuleInterop": true,
     "jsx": "react",
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "strict": true,
     "target": "esnext"
-  },
-  "files": ["./Application.ts", "./TestApplication/index.ts"]
+  }
 }

@@ -1,4 +1,9 @@
 {
+  "bin": "./test.js",
+  "dependencies": {
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.12.3",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
