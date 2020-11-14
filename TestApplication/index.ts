@@ -12,7 +12,7 @@ class TestApplication extends Application {
   constructor() {
     super(
       'Testovacia aplikácia, ktorá po pridaní vytvorí HTTP server.',
-      `file://${path.resolve(__dirname, './TestApplication.html')}`,
+      `file://${path.resolve(__dirname, './index.html')}`,
       'TestApplication',
       '1.0.0',
     );

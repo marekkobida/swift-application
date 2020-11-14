@@ -11,7 +11,7 @@ const path_1 = __importDefault(require("path"));
 const Application_1 = __importDefault(require("../Application"));
 class TestApplication extends Application_1.default {
     constructor() {
-        super('Testovacia aplikácia, ktorá po pridaní vytvorí HTTP server.', `file://${path_1.default.resolve(__dirname, './TestApplication.html')}`, 'TestApplication', '1.0.0');
+        super('Testovacia aplikácia, ktorá po pridaní vytvorí HTTP server.', `file://${path_1.default.resolve(__dirname, './index.html')}`, 'TestApplication', '1.0.0');
     }
     afterAdd() {
         this.httpServer.on('request', (request, response) => {
