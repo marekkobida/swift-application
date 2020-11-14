@@ -6,7 +6,7 @@ import './TestApplication.html';
 
 import path from 'path';
 
-import Application from './Application';
+import Application from '../Application';
 
 class TestApplication extends Application {
   constructor() {
