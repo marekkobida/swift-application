@@ -2,7 +2,7 @@
  * Copyright 2020 Marek Kobida
  */
 
-import './TestApplication.html';
+import './index.html';
 
 import path from 'path';
 

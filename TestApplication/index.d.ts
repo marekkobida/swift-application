@@ -1,4 +1,4 @@
-import './TestApplication.html';
+import './index.html';
 import Application from '../Application';
 declare class TestApplication extends Application {
     constructor();
