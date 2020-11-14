@@ -1,12 +1,13 @@
 `npm install https://github.com/marekkobida/swift-application`
 
-## TestApplication.html
+## TestApplication
+
+### TestApplication.html
 
 ```html
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
     <title>TestApplication</title>
   </head>
   <body>
@@ -15,7 +16,7 @@
 </html>
 ```
 
-## TestApplication.js
+### TestApplication.js
 
 ```js
 const path = require('path');
