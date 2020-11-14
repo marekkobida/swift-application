@@ -1,5 +1,7 @@
 {
-  "bin": "./test.js",
+  "bin": {
+    "application": "application.js"
+  },
   "dependencies": {
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
