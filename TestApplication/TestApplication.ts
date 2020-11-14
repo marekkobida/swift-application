@@ -2,8 +2,6 @@
  * Copyright 2020 Marek Kobida
  */
 
-import './client.html';
-
 import path from 'path';
 
 import Application from '../Application';
