@@ -37,6 +37,9 @@ function server(inputFilePath, outputFileName, outputPath) {
     resolve: {
       extensions: ['.ts', '.js'],
     },
+    snapshot: {
+      managedPaths: [],
+    },
     target: 'node',
   };
 }
