@@ -12,7 +12,7 @@ const { applicationsToCompile } = require(path.resolve(
 
 const compiler = webpack(applications(applicationsToCompile));
 
-compiler.watch({}, (error, test) => {
+function p(error, test) {
   const json = test.toJson();
 
   if (test.hasErrors()) {
@@ -28,4 +28,10 @@ compiler.watch({}, (error, test) => {
       ),
     ),
   );
-});
+}
+
+if (process.env.NODE_ENV === 'watch') {
+  compiler.watch({}, p);
+} else {
+  compiler.run(p);
+}
