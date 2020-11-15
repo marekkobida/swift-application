@@ -1,6 +1,6 @@
 {
   "bin": {
-    "application": "application.js"
+    "swift": "swift.js"
   },
   "dependencies": {
     "@babel/core": "^7.12.3",

@@ -23,7 +23,6 @@ function applications(applicationsToCompile) {
             './public/applications',
             path.basename(applicationToCompile),
           ),
-          'web',
         ),
       ),
     ...applicationsToCompile

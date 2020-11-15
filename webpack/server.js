@@ -2,6 +2,8 @@
  * Copyright 2020 Marek Kobida
  */
 
+const path = require('path');
+
 function server(inputFilePath, outputFileName, outputPath) {
   return {
     devtool: 'inline-source-map',
@@ -18,6 +20,9 @@ function server(inputFilePath, outputFileName, outputPath) {
           use: [
             {
               loader: 'babel-loader',
+              options: {
+                configFile: path.resolve(__dirname, '../babel.config.js'),
+              },
             },
           ],
         },

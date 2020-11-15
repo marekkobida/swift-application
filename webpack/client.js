@@ -2,12 +2,9 @@
  * Copyright 2020 Marek Kobida
  */
 
-function client(
-  inputFilePath,
-  outputFileName,
-  outputPath,
-  test = 'electron-renderer',
-) {
+const path = require('path');
+
+function client(inputFilePath, outputFileName, outputPath) {
   return {
     devtool: 'inline-source-map',
     entry: inputFilePath,
@@ -23,6 +20,9 @@ function client(
           use: [
             {
               loader: 'babel-loader',
+              options: {
+                configFile: path.resolve(__dirname, '../babel.config.js'),
+              },
             },
           ],
         },
@@ -36,7 +36,6 @@ function client(
     resolve: {
       extensions: ['.tsx', '.ts', '.js'],
     },
-    target: test,
   };
 }
 
