@@ -8,7 +8,7 @@ const path = require('path');
 const client = require('./client');
 const server = require('./server');
 
-function applications(applicationsToCompile) {
+function applications(applicationsToCompile, outputPath) {
   return [
     ...applicationsToCompile
       .filter(applicationToCompile =>
@@ -18,11 +18,7 @@ function applications(applicationsToCompile) {
         client(
           path.resolve(applicationToCompile, './client.tsx'),
           'client.js',
-          path.resolve(
-            process.cwd(),
-            './public/applications',
-            path.basename(applicationToCompile),
-          ),
+          outputPath(applicationToCompile),
         ),
       ),
     ...applicationsToCompile
@@ -33,11 +29,7 @@ function applications(applicationsToCompile) {
         server(
           path.resolve(applicationToCompile, './index.ts'),
           'index.js',
-          path.resolve(
-            process.cwd(),
-            './public/applications',
-            path.basename(applicationToCompile),
-          ),
+          outputPath(applicationToCompile),
         ),
       ),
   ];

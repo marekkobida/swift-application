@@ -10,7 +10,15 @@ const { applicationsToCompile } = require(path.resolve(
   './package.json',
 ));
 
-const compiler = webpack(applications(applicationsToCompile));
+const compiler = webpack(
+  applications(applicationsToCompile),
+  applicationToCompile =>
+    path.resolve(
+      process.cwd(),
+      './public/applications',
+      path.basename(applicationToCompile),
+    ),
+);
 
 function $(error, test) {
   const json = test.toJson();
