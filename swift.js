@@ -12,10 +12,10 @@ const { applicationsToCompile } = require(path.resolve(
 
 const compiler = webpack(applications(applicationsToCompile));
 
-function p(error, test) {
-  const json = test.toJson();
+function $(error, { hasErrors, toJson }) {
+  const json = toJson();
 
-  if (test.hasErrors()) {
+  if (hasErrors()) {
     json.errors.forEach((error, i) =>
       console.log(`[${i + 1}] \x1b[31m${error.message}\x1b[0m`),
     );
@@ -30,8 +30,8 @@ function p(error, test) {
   );
 }
 
-if (process.env.NODE_ENV === 'watch') {
-  compiler.watch({}, p);
+if (process.env.npm_command === 'run-script') {
+  compiler.run($);
 } else {
-  compiler.run(p);
+  compiler.watch({}, $);
 }
