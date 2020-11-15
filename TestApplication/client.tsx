@@ -14,7 +14,12 @@ function Client() {
     'httpServerUrl',
   );
 
-  return <>{httpServerUrlFromUrlSearchParameters}</>;
+  return (
+    <>
+      <h1>{httpServerUrlFromUrlSearchParameters}</h1>
+      <p>HTTP server, ktorý po pridaní vytvorila testovacia aplikácia.</p>
+    </>
+  );
 }
 
 ReactDOM.render(<Client />, document.getElementById('client'));
