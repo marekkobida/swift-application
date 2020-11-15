@@ -12,10 +12,10 @@ const { applicationsToCompile } = require(path.resolve(
 
 const compiler = webpack(applications(applicationsToCompile));
 
-function $(error, { hasErrors, toJson }) {
-  const json = toJson();
+function $(error, test) {
+  const json = test.toJson();
 
-  if (hasErrors()) {
+  if (test.hasErrors()) {
     json.errors.forEach((error, i) =>
       console.log(`[${i + 1}] \x1b[31m${error.message}\x1b[0m`),
     );
