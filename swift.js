@@ -11,13 +11,13 @@ const { applicationsToCompile } = require(path.resolve(
 ));
 
 const compiler = webpack(
-  applications(applicationsToCompile),
-  applicationToCompile =>
+  applications(applicationsToCompile, applicationToCompile =>
     path.resolve(
       process.cwd(),
       './public/applications',
       path.basename(applicationToCompile),
     ),
+  ),
 );
 
 function $(error, test) {
