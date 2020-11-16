@@ -39,9 +39,6 @@ function client(
     resolve: {
       extensions: ['.js', '.ts', '.tsx'],
     },
-    snapshot: {
-      managedPaths: [],
-    },
   };
 }
 

@@ -35,9 +35,6 @@ function application(
     resolve: {
       extensions: ['.js', '.ts'],
     },
-    snapshot: {
-      managedPaths: [],
-    },
     target: 'node',
   };
 }
