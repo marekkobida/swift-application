@@ -25,4 +25,4 @@ function compileApplications(applicationsToCompile, outputPath, afterCompilation
         }
     });
 }
-module.exports = compileApplications;
+exports.default = compileApplications;

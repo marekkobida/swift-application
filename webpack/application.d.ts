@@ -8,7 +8,8 @@ declare function application(inputFilePath: string, outputFileName: string, outp
             use: {
                 loader: string;
                 options: {
-                    configFile: string;
+                    plugins: string[];
+                    presets: string[];
                 };
             }[];
         }[];

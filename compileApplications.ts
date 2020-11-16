@@ -44,4 +44,4 @@ function compileApplications(
   });
 }
 
-module.exports = compileApplications;
+export default compileApplications;

@@ -2,11 +2,7 @@
 /*
  * Copyright 2020 Marek Kobida
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const path_1 = __importDefault(require("path"));
 function client(inputFilePath, outputFileName, outputPath) {
     return {
         devtool: 'inline-source-map',
@@ -24,7 +20,8 @@ function client(inputFilePath, outputFileName, outputPath) {
                         {
                             loader: 'babel-loader',
                             options: {
-                                configFile: path_1.default.resolve(__dirname, '../babel.config.js'),
+                                plugins: ['@babel/plugin-proposal-class-properties'],
+                                presets: ['@babel/preset-react', '@babel/preset-typescript'],
                             },
                         },
                     ],

@@ -2,8 +2,6 @@
  * Copyright 2020 Marek Kobida
  */
 
-import path from 'path';
-
 function application(
   inputFilePath: string,
   outputFileName: string,
@@ -21,7 +19,8 @@ function application(
             {
               loader: 'babel-loader',
               options: {
-                configFile: path.resolve(__dirname, '../babel.config.js'),
+                plugins: ['@babel/plugin-proposal-class-properties'],
+                presets: ['@babel/preset-react', '@babel/preset-typescript'],
               },
             },
           ],

@@ -8,7 +8,8 @@ declare function applications(applicationsToCompile: string[], outputPath: (appl
             use: {
                 loader: string;
                 options: {
-                    configFile: string;
+                    plugins: string[];
+                    presets: string[];
                 };
             }[];
         }[];
@@ -39,7 +40,8 @@ declare function applications(applicationsToCompile: string[], outputPath: (appl
             use: {
                 loader: string;
                 options: {
-                    configFile: string;
+                    plugins: string[];
+                    presets: string[];
                 };
             }[];
             type?: undefined;

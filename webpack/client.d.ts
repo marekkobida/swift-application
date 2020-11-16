@@ -12,7 +12,8 @@ declare function client(inputFilePath: string, outputFileName: string, outputPat
             use: {
                 loader: string;
                 options: {
-                    configFile: string;
+                    plugins: string[];
+                    presets: string[];
                 };
             }[];
             type?: undefined;
