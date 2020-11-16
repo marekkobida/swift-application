@@ -14,6 +14,10 @@ function application(
     module: {
       rules: [
         {
+          test: /\.(css|html)$/,
+          type: 'asset/resource',
+        },
+        {
           test: /\.(js|ts)$/,
           use: [
             {
@@ -28,6 +32,7 @@ function application(
       ],
     },
     output: {
+      assetModuleFilename: '[name][ext]',
       filename: outputFileName,
       libraryTarget: 'commonjs',
       path: outputPath,

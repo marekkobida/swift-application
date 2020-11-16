@@ -4,15 +4,18 @@ import path from 'path';
 
 import compileApplications from './compileApplications';
 
-const { applicationsToCompile } = require(path.resolve(
-  process.cwd(),
-  './package.json',
-));
+async function swift() {
+  const { applicationsToCompile } = await import(
+    path.resolve(process.cwd(), './package.json')
+  );
 
-compileApplications(applicationsToCompile, applicationToCompile =>
-  path.resolve(
-    process.cwd(),
-    './public/applications',
-    path.basename(applicationToCompile),
-  ),
-);
+  await compileApplications(applicationsToCompile, applicationToCompile =>
+    path.resolve(
+      process.cwd(),
+      './public/applications',
+      path.basename(applicationToCompile),
+    ),
+  );
+}
+
+swift();

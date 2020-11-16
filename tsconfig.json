@@ -6,6 +6,7 @@
     "jsx": "react",
     "module": "CommonJS",
     "moduleResolution": "Node",
+    "resolveJsonModule": true,
     "strict": true,
     "target": "ESNext"
   },
