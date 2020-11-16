@@ -2,7 +2,7 @@
 
 import path from 'path';
 
-import compileApplications from './compileApplications';
+import compileApplications from './webpack/compileApplications';
 
 async function swift() {
   const { applicationsToCompile } = await import(

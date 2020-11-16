@@ -12,11 +12,11 @@
   },
   "files": [
     "./Application.ts",
-    "./compileApplications.ts",
     "./openApplication.ts",
     "./swift.ts",
     "./webpack/application.ts",
     "./webpack/applications.ts",
-    "./webpack/client.ts"
+    "./webpack/client.ts",
+    "./webpack/compileApplications.ts"
   ]
 }

@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
-const compileApplications_1 = __importDefault(require("./compileApplications"));
+const compileApplications_1 = __importDefault(require("./webpack/compileApplications"));
 const APPLICATION_PATH = process.argv[2];
 const APPLICATION_NAME = path_1.default.basename(APPLICATION_PATH);
 const APPLICATION_TS_FILE_PATH = path_1.default.resolve(APPLICATION_PATH, './index.ts');

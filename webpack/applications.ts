@@ -8,11 +8,10 @@ import path from 'path';
 import application from './application';
 import client from './client';
 
-import compileApplications from '../compileApplications';
-
-function applications([applicationsToCompile, outputPath]: Parameters<
-  typeof compileApplications
->) {
+function applications(
+  applicationsToCompile: string[],
+  outputPath: (applicationToCompile: string) => string,
+) {
   return [
     ...applicationsToCompile
       .filter(applicationToCompile =>

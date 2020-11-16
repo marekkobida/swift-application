@@ -10,7 +10,7 @@ const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const application_1 = __importDefault(require("./application"));
 const client_1 = __importDefault(require("./client"));
-function applications([applicationsToCompile, outputPath]) {
+function applications(applicationsToCompile, outputPath) {
     return [
         ...applicationsToCompile
             .filter(applicationToCompile => fs_1.default.existsSync(path_1.default.resolve(applicationToCompile, './index.ts')))

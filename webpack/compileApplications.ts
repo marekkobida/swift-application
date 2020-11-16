@@ -5,14 +5,14 @@
 import path from 'path';
 import webpack from 'webpack';
 
-import applications from './webpack/applications';
+import applications from './applications';
 
 async function compileApplications(
   applicationsToCompile: string[],
   outputPath: (applicationToCompile: string) => string,
 ) {
   return new Promise(afterCompilation => {
-    const compiler = webpack(applications([applicationsToCompile, outputPath]));
+    const compiler = webpack(applications(applicationsToCompile, outputPath));
 
     compiler.run((error, $) => {
       if ($) {

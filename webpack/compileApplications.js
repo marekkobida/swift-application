@@ -8,10 +8,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const webpack_1 = __importDefault(require("webpack"));
-const applications_1 = __importDefault(require("./webpack/applications"));
+const applications_1 = __importDefault(require("./applications"));
 async function compileApplications(applicationsToCompile, outputPath) {
     return new Promise(afterCompilation => {
-        const compiler = webpack_1.default(applications_1.default([applicationsToCompile, outputPath]));
+        const compiler = webpack_1.default(applications_1.default(applicationsToCompile, outputPath));
         compiler.run((error, $) => {
             if ($) {
                 $.stats.forEach(({ compilation }) => {

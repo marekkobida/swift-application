@@ -4,7 +4,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import compileApplications from './compileApplications';
+import compileApplications from './webpack/compileApplications';
 
 const APPLICATION_PATH = process.argv[2];
 

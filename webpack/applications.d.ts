@@ -1,5 +1,4 @@
-import compileApplications from '../compileApplications';
-declare function applications([applicationsToCompile, outputPath]: Parameters<typeof compileApplications>): {
+declare function applications(applicationsToCompile: string[], outputPath: (applicationToCompile: string) => string): {
     devtool: string;
     entry: string;
     mode: "development";
