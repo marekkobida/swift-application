@@ -1,4 +1,4 @@
 [submodule "public"]
-	path = public
-	url = https://github.com/marekkobida/swift-application
-	branch = public
+  branch = public
+  path = public
+  url = https://github.com/marekkobida/swift-application
