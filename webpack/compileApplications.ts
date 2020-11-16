@@ -2,6 +2,7 @@
  * Copyright 2020 Marek Kobida
  */
 
+import fs from 'fs';
 import path from 'path';
 import webpack from 'webpack';
 
@@ -12,6 +13,13 @@ async function compileApplications(
   outputPath: (applicationToCompile: string) => string,
 ) {
   return new Promise(afterCompilation => {
+    applicationsToCompile.forEach(applicationToCompile => {
+      fs.copyFileSync(
+        path.resolve(applicationToCompile, './client.html'),
+        path.resolve(outputPath(applicationToCompile), './client.html'),
+      );
+    });
+
     const compiler = webpack(applications(applicationsToCompile, outputPath));
 
     compiler.run((error, $) => {

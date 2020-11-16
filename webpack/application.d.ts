@@ -3,11 +3,7 @@ declare function application(inputFilePath: string, outputFileName: string, outp
     entry: string;
     mode: "development";
     module: {
-        rules: ({
-            test: RegExp;
-            type: string;
-            use?: undefined;
-        } | {
+        rules: {
             test: RegExp;
             use: {
                 loader: string;
@@ -16,11 +12,9 @@ declare function application(inputFilePath: string, outputFileName: string, outp
                     presets: string[];
                 };
             }[];
-            type?: undefined;
-        })[];
+        }[];
     };
     output: {
-        assetModuleFilename: string;
         filename: string;
         libraryTarget: string;
         path: string;

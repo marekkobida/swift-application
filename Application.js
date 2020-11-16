@@ -7,10 +7,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = __importDefault(require("http"));
+const path_1 = __importDefault(require("path"));
 class Application {
-    constructor(description, htmlFileUrl, name, version) {
+    constructor(description, name, version) {
         this.description = description;
-        this.htmlFileUrl = htmlFileUrl;
         this.name = name;
         this.version = version;
         this.httpServerSockets = new Set();
@@ -65,7 +65,7 @@ class Application {
         const $ = this.httpServer.address();
         return $ !== null && typeof $ === 'object'
             ? `http://127.0.0.1:${$.port}`
-            : this.htmlFileUrl;
+            : '';
     }
     sendIPCMessage(clientIPCMessage) {
         process.send?.(clientIPCMessage);
@@ -80,7 +80,7 @@ class Application {
         };
     }
     updateHtmlFileUrl() {
-        const htmlFileUrl = new URL(this.htmlFileUrl);
+        const htmlFileUrl = new URL(`file://${path_1.default.resolve(__dirname, './client.html')}`);
         htmlFileUrl.searchParams.set('httpServerUrl', this.httpServerUrl());
         return htmlFileUrl.toString();
     }

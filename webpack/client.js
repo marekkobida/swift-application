@@ -11,7 +11,7 @@ function client(inputFilePath, outputFileName, outputPath) {
         module: {
             rules: [
                 {
-                    test: /\.(css|html)$/,
+                    test: /\.css$/,
                     type: 'asset/resource',
                 },
                 {

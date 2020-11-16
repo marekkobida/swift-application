@@ -1,4 +1,32 @@
-declare function applications(applicationsToCompile: string[], outputPath: (applicationToCompile: string) => string): {
+declare function applications(applicationsToCompile: string[], outputPath: (applicationToCompile: string) => string): ({
+    devtool: string;
+    entry: string;
+    mode: "development";
+    module: {
+        rules: {
+            test: RegExp;
+            use: {
+                loader: string;
+                options: {
+                    plugins: string[];
+                    presets: string[];
+                };
+            }[];
+        }[];
+    };
+    output: {
+        filename: string;
+        libraryTarget: string;
+        path: string;
+    };
+    resolve: {
+        extensions: string[];
+    };
+    snapshot: {
+        managedPaths: never[];
+    };
+    target: string;
+} | {
     devtool: string;
     entry: string;
     mode: "development";
@@ -30,5 +58,5 @@ declare function applications(applicationsToCompile: string[], outputPath: (appl
     snapshot: {
         managedPaths: never[];
     };
-}[];
+})[];
 export default applications;

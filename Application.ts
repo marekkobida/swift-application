@@ -4,6 +4,7 @@
 
 import http from 'http';
 import net from 'net';
+import path from 'path';
 
 export interface ClientIPCMessage {
   application: ReturnType<Application['toJSON']>;
@@ -21,7 +22,6 @@ class Application {
 
   constructor(
     readonly description: string,
-    readonly htmlFileUrl: string,
     readonly name: string,
     readonly version: string,
   ) {
@@ -101,7 +101,7 @@ class Application {
 
     return $ !== null && typeof $ === 'object'
       ? `http://127.0.0.1:${$.port}`
-      : this.htmlFileUrl;
+      : '';
   }
 
   sendIPCMessage(clientIPCMessage: ClientIPCMessage) {
@@ -119,7 +119,9 @@ class Application {
   }
 
   private updateHtmlFileUrl(): string {
-    const htmlFileUrl = new URL(this.htmlFileUrl);
+    const htmlFileUrl = new URL(
+      `file://${path.resolve(__dirname, './client.html')}`,
+    );
 
     htmlFileUrl.searchParams.set('httpServerUrl', this.httpServerUrl());
 

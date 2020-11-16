@@ -11,10 +11,6 @@ function application(inputFilePath, outputFileName, outputPath) {
         module: {
             rules: [
                 {
-                    test: /\.(css|html)$/,
-                    type: 'asset/resource',
-                },
-                {
                     test: /\.(js|ts)$/,
                     use: [
                         {
@@ -29,7 +25,6 @@ function application(inputFilePath, outputFileName, outputPath) {
             ],
         },
         output: {
-            assetModuleFilename: '[name][ext]',
             filename: outputFileName,
             libraryTarget: 'commonjs',
             path: outputPath,

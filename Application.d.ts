@@ -10,12 +10,11 @@ export interface ServerIPCMessage {
 }
 declare class Application {
     readonly description: string;
-    readonly htmlFileUrl: string;
     readonly name: string;
     readonly version: string;
     httpServer: http.Server;
     httpServerSockets: Set<net.Socket>;
-    constructor(description: string, htmlFileUrl: string, name: string, version: string);
+    constructor(description: string, name: string, version: string);
     afterAdd(): void;
     afterDelete(): void;
     private createHttpServer;
