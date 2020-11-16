@@ -17,7 +17,6 @@
     "./openApplication.ts",
     "./swift.ts",
     "./webpack/application.ts",
-    "./webpack/applications.ts",
     "./webpack/client.ts",
     "./webpack/compileApplications.ts"
   ]

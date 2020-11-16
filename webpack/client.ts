@@ -18,16 +18,12 @@ function client(
           type: 'asset/resource',
         },
         {
+          loader: 'babel-loader',
+          options: {
+            plugins: ['@babel/plugin-proposal-class-properties'],
+            presets: ['@babel/preset-react', '@babel/preset-typescript'],
+          },
           test: /\.(js|ts|tsx)$/,
-          use: [
-            {
-              loader: 'babel-loader',
-              options: {
-                plugins: ['@babel/plugin-proposal-class-properties'],
-                presets: ['@babel/preset-react', '@babel/preset-typescript'],
-              },
-            },
-          ],
         },
       ],
     },

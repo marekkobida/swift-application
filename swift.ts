@@ -15,7 +15,7 @@ async function swift() {
     path.resolve(
       process.cwd(),
       './public/applications',
-      path.basename(applicationToCompile),
+      path.basename(applicationToCompile.path),
     ),
   );
 }

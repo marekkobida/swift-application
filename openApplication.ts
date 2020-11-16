@@ -7,26 +7,31 @@ import path from 'path';
 import compileApplications from './webpack/compileApplications';
 
 async function openApplication() {
-  let applicationToCompile = process.argv[2];
+  let applicationToCompilePath = process.argv[2];
 
   /* ---------------------------------------------------------------- */
 
-  if (fs.existsSync(path.resolve(applicationToCompile, './index.ts'))) {
+  if (fs.existsSync(path.resolve(applicationToCompilePath, './index.ts'))) {
     const outputPath = path.resolve(
       os.tmpdir(),
       './applications',
-      path.basename(applicationToCompile),
+      path.basename(applicationToCompilePath),
     );
 
-    await compileApplications([applicationToCompile], () => outputPath);
+    await compileApplications(
+      [{ path: applicationToCompilePath }],
+      () => outputPath,
+    );
 
-    applicationToCompile = outputPath;
+    applicationToCompilePath = outputPath;
   }
 
   /* ---------------------------------------------------------------- */
 
-  let application = require(path.resolve(applicationToCompile, './index.js'))
-    .default;
+  let application = require(path.resolve(
+    applicationToCompilePath,
+    './index.js',
+  )).default;
 
   new application();
 }
