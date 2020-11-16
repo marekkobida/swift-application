@@ -11,16 +11,12 @@ function application(inputFilePath, outputFileName, outputPath) {
         module: {
             rules: [
                 {
+                    loader: 'babel-loader',
+                    options: {
+                        plugins: ['@babel/plugin-proposal-class-properties'],
+                        presets: ['@babel/preset-react', '@babel/preset-typescript'],
+                    },
                     test: /\.(js|ts)$/,
-                    use: [
-                        {
-                            loader: 'babel-loader',
-                            options: {
-                                plugins: ['@babel/plugin-proposal-class-properties'],
-                                presets: ['@babel/preset-react', '@babel/preset-typescript'],
-                            },
-                        },
-                    ],
                 },
             ],
         },

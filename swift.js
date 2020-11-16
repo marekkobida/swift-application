@@ -27,6 +27,7 @@ const path_1 = __importDefault(require("path"));
 const compileApplications_1 = __importDefault(require("./webpack/compileApplications"));
 async function swift() {
     const { swift: { applicationsToCompile }, } = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(process.cwd(), './package.json'))));
-    await compileApplications_1.default(applicationsToCompile, applicationToCompile => path_1.default.resolve(process.cwd(), './public/applications', path_1.default.basename(applicationToCompile)));
+    /* ---------------------------------------------------------------- */
+    await compileApplications_1.default(applicationsToCompile, applicationToCompile => path_1.default.resolve(process.cwd(), './public/applications', path_1.default.basename(applicationToCompile.path)));
 }
 swift();

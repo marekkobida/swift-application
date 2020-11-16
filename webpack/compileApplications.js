@@ -9,25 +9,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const webpack_1 = __importDefault(require("webpack"));
-const applications_1 = __importDefault(require("./applications"));
+const application_1 = __importDefault(require("./application"));
+const client_1 = __importDefault(require("./client"));
 async function compileApplications(applicationsToCompile, outputPath) {
     return new Promise(afterCompilation => {
-        const compiler = webpack_1.default(applications_1.default(applicationsToCompile, outputPath));
+        const compiler = webpack_1.default([
+            ...applicationsToCompile
+                .filter(applicationToCompile => fs_1.default.existsSync(path_1.default.resolve(applicationToCompile.path, './client.tsx')))
+                .map(applicationToCompile => client_1.default(path_1.default.resolve(applicationToCompile.path, './client.tsx'), './client.js', outputPath(applicationToCompile))),
+            ...applicationsToCompile
+                .filter(applicationToCompile => fs_1.default.existsSync(path_1.default.resolve(applicationToCompile.path, './index.ts')))
+                .map(applicationToCompile => application_1.default(path_1.default.resolve(applicationToCompile.path, './index.ts'), './index.js', outputPath(applicationToCompile))),
+        ]);
         /* ---------------------------------------------------------------- */
-        compiler.run((error, $) => {
-            if ($) {
-                $.stats.forEach(({ compilation }) => {
-                    compilation.emittedAssets.forEach(emittedAsset => console.log(path_1.default.resolve(compilation.compiler.outputPath, emittedAsset)));
-                    compilation.errors.forEach(error => console.log(`\x1b[31m${error.message}\x1b[0m`));
-                });
-                /* ---------------------------------------------------------------- */
-                try {
-                    applicationsToCompile.forEach(applicationToCompile => fs_1.default.copyFileSync(path_1.default.resolve(applicationToCompile, './client.html'), path_1.default.resolve(outputPath(applicationToCompile), './client.html')));
-                }
-                catch (error) { }
-                /* ---------------------------------------------------------------- */
-                afterCompilation();
-            }
+        compiler.run((...parameters) => {
+            parameters[1]?.stats.forEach(({ compilation }) => {
+                compilation.emittedAssets.forEach(emittedAsset => console.log(path_1.default.resolve(compilation.compiler.outputPath, emittedAsset)));
+                compilation.errors.forEach(error => console.log(`\x1b[31m${error.message}\x1b[0m`));
+            });
+            /* ---------------------------------------------------------------- */
+            afterCompilation();
         });
     });
 }

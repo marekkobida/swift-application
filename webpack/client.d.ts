@@ -6,16 +6,15 @@ declare function client(inputFilePath: string, outputFileName: string, outputPat
         rules: ({
             test: RegExp;
             type: string;
-            use?: undefined;
+            loader?: undefined;
+            options?: undefined;
         } | {
+            loader: string;
+            options: {
+                plugins: string[];
+                presets: string[];
+            };
             test: RegExp;
-            use: {
-                loader: string;
-                options: {
-                    plugins: string[];
-                    presets: string[];
-                };
-            }[];
             type?: undefined;
         })[];
     };

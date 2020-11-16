@@ -4,14 +4,12 @@ declare function application(inputFilePath: string, outputFileName: string, outp
     mode: "development";
     module: {
         rules: {
+            loader: string;
+            options: {
+                plugins: string[];
+                presets: string[];
+            };
             test: RegExp;
-            use: {
-                loader: string;
-                options: {
-                    plugins: string[];
-                    presets: string[];
-                };
-            }[];
         }[];
     };
     output: {
