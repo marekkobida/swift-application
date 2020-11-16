@@ -9,13 +9,10 @@ const { applicationsToCompile } = require(path.resolve(
   './package.json',
 ));
 
-compileApplications(
-  applicationsToCompile,
-  applicationToCompile =>
-    path.resolve(
-      process.cwd(),
-      './public/applications',
-      path.basename(applicationToCompile),
-    ),
-  () => {},
+compileApplications(applicationsToCompile, applicationToCompile =>
+  path.resolve(
+    process.cwd(),
+    './public/applications',
+    path.basename(applicationToCompile),
+  ),
 );
