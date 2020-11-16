@@ -10,15 +10,14 @@ const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const application_1 = __importDefault(require("./application"));
 const client_1 = __importDefault(require("./client"));
-const package_json_1 = require("../package.json");
 function applications([applicationsToCompile, outputPath]) {
     return [
         ...applicationsToCompile
-            .filter(applicationToCompile => fs_1.default.existsSync(path_1.default.resolve(applicationToCompile, package_json_1.APPLICATION_TS_FILE_NAME)))
-            .map(applicationToCompile => application_1.default(path_1.default.resolve(applicationToCompile, package_json_1.APPLICATION_TS_FILE_NAME), package_json_1.APPLICATION_JS_FILE_NAME, outputPath(applicationToCompile))),
+            .filter(applicationToCompile => fs_1.default.existsSync(path_1.default.resolve(applicationToCompile, './index.ts')))
+            .map(applicationToCompile => application_1.default(path_1.default.resolve(applicationToCompile, './index.ts'), './index.js', outputPath(applicationToCompile))),
         ...applicationsToCompile
-            .filter(applicationToCompile => fs_1.default.existsSync(path_1.default.resolve(applicationToCompile, package_json_1.APPLICATION_CLIENT_TSX_FILE_NAME)))
-            .map(applicationToCompile => client_1.default(path_1.default.resolve(applicationToCompile, package_json_1.APPLICATION_CLIENT_TSX_FILE_NAME), package_json_1.APPLICATION_CLIENT_JS_FILE_NAME, outputPath(applicationToCompile))),
+            .filter(applicationToCompile => fs_1.default.existsSync(path_1.default.resolve(applicationToCompile, './client.tsx')))
+            .map(applicationToCompile => client_1.default(path_1.default.resolve(applicationToCompile, './client.tsx'), './client.js', outputPath(applicationToCompile))),
     ];
 }
 exports.default = applications;
