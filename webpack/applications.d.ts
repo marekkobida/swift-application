@@ -1,33 +1,5 @@
 import compileApplications from '../compileApplications';
-declare function applications([applicationsToCompile, outputPath]: Parameters<typeof compileApplications>): ({
-    devtool: string;
-    entry: string;
-    mode: "development";
-    module: {
-        rules: {
-            test: RegExp;
-            use: {
-                loader: string;
-                options: {
-                    plugins: string[];
-                    presets: string[];
-                };
-            }[];
-        }[];
-    };
-    output: {
-        filename: string;
-        libraryTarget: string;
-        path: string;
-    };
-    resolve: {
-        extensions: string[];
-    };
-    snapshot: {
-        managedPaths: never[];
-    };
-    target: string;
-} | {
+declare function applications([applicationsToCompile, outputPath]: Parameters<typeof compileApplications>): {
     devtool: string;
     entry: string;
     mode: "development";
@@ -59,5 +31,5 @@ declare function applications([applicationsToCompile, outputPath]: Parameters<ty
     snapshot: {
         managedPaths: never[];
     };
-})[];
+}[];
 export default applications;
