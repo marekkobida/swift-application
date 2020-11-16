@@ -8,8 +8,3 @@ const path_1 = __importDefault(require("path"));
 const compileApplications_1 = __importDefault(require("./compileApplications"));
 const { applicationsToCompile } = require(path_1.default.resolve(process.cwd(), './package.json'));
 compileApplications_1.default(applicationsToCompile, applicationToCompile => path_1.default.resolve(process.cwd(), './public/applications', path_1.default.basename(applicationToCompile)), () => { });
-// if (process.env.npm_command === 'run-script') {
-//   compiler.run(afterCompilation);
-// } else {
-//   compiler.watch({}, afterCompilation);
-// }

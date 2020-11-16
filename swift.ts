@@ -19,9 +19,3 @@ compileApplications(
     ),
   () => {},
 );
-
-// if (process.env.npm_command === 'run-script') {
-//   compiler.run(afterCompilation);
-// } else {
-//   compiler.watch({}, afterCompilation);
-// }
