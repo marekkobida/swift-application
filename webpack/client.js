@@ -36,9 +36,6 @@ function client(inputFilePath, outputFileName, outputPath) {
         resolve: {
             extensions: ['.js', '.ts', '.tsx'],
         },
-        snapshot: {
-            managedPaths: [],
-        },
     };
 }
 exports.default = client;

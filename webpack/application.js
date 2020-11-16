@@ -32,9 +32,6 @@ function application(inputFilePath, outputFileName, outputPath) {
         resolve: {
             extensions: ['.js', '.ts'],
         },
-        snapshot: {
-            managedPaths: [],
-        },
         target: 'node',
     };
 }

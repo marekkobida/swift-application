@@ -22,9 +22,6 @@ declare function applications(applicationsToCompile: string[], outputPath: (appl
     resolve: {
         extensions: string[];
     };
-    snapshot: {
-        managedPaths: never[];
-    };
     target: string;
 } | {
     devtool: string;
@@ -54,9 +51,6 @@ declare function applications(applicationsToCompile: string[], outputPath: (appl
     };
     resolve: {
         extensions: string[];
-    };
-    snapshot: {
-        managedPaths: never[];
     };
 })[];
 export default applications;

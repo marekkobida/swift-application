@@ -27,8 +27,5 @@ declare function client(inputFilePath: string, outputFileName: string, outputPat
     resolve: {
         extensions: string[];
     };
-    snapshot: {
-        managedPaths: never[];
-    };
 };
 export default client;

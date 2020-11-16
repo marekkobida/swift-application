@@ -22,9 +22,6 @@ declare function application(inputFilePath: string, outputFileName: string, outp
     resolve: {
         extensions: string[];
     };
-    snapshot: {
-        managedPaths: never[];
-    };
     target: string;
 };
 export default application;
