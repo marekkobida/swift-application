@@ -1,15 +1,13 @@
 #!/usr/bin/env node
 
-import path from 'path';
+import path from 'path'
 
-import compileApplications from './webpack/compileApplications';
+import compileApplications from './webpack/compileApplications'
 
 async function swift() {
   const {
     swift: { applicationsToCompile },
-  } = await import(path.resolve(process.cwd(), './package.json'));
-
-  /* ---------------------------------------------------------------- */
+  } = await import(path.resolve(process.cwd(), './package.json'))
 
   await compileApplications(applicationsToCompile, applicationToCompile =>
     path.resolve(
@@ -17,7 +15,7 @@ async function swift() {
       './public/applications',
       path.basename(applicationToCompile.path),
     ),
-  );
+  )
 }
 
-swift();
+swift()

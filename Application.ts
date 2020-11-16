@@ -20,8 +20,8 @@ class Application {
       htmlFileUrl: this.htmlFileUrl,
       name: this.name,
       version: this.version,
-    };
+    }
   }
 }
 
-export default Application;
+export default Application

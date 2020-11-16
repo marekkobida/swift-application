@@ -2,22 +2,16 @@
  * Copyright 2020 Marek Kobida
  */
 
-import fs from 'fs';
-import path from 'path';
-import webpack from 'webpack';
+import fs from 'fs'
+import path from 'path'
+import webpack from 'webpack'
 
-import application from './application';
-import client from './client';
-
-export interface ApplicationToCompile {
-  path: string;
-}
+import application from './application'
+import client from './client'
 
 async function compileApplications(
-  applicationsToCompile: ApplicationToCompile[],
-  outputPath: (
-    applicationToCompile: ApplicationToCompile,
-  ) => ApplicationToCompile['path'],
+  applicationsToCompile: { path: string }[],
+  outputPath: (applicationToCompile: { path: string }) => string,
 ) {
   return new Promise(afterCompilation => {
     const compiler = webpack([
@@ -45,28 +39,14 @@ async function compileApplications(
             outputPath(applicationToCompile),
           ),
         ),
-    ]);
-
-    /* ---------------------------------------------------------------- */
+    ])
 
     compiler.run((...parameters) => {
-      parameters[1]?.stats.forEach(({ compilation }) => {
-        compilation.emittedAssets.forEach(emittedAsset =>
-          console.log(
-            path.resolve(compilation.compiler.outputPath, emittedAsset),
-          ),
-        );
+      console.log(parameters[1]?.toString({ colors: true }))
 
-        compilation.errors.forEach(error =>
-          console.log(`\x1b[31m${error.message}\x1b[0m`),
-        );
-      });
-
-      /* ---------------------------------------------------------------- */
-
-      afterCompilation();
-    });
-  });
+      afterCompilation()
+    })
+  })
 }
 
-export default compileApplications;
+export default compileApplications

@@ -2,11 +2,14 @@
  * Copyright 2020 Marek Kobida
  */
 
+import path from 'path'
+import webpack from 'webpack'
+
 function client(
   inputFilePath: string,
   outputFileName: string,
   outputPath: string,
-) {
+): webpack.Configuration {
   return {
     devtool: 'inline-source-map',
     entry: inputFilePath,
@@ -14,14 +17,13 @@ function client(
     module: {
       rules: [
         {
-          test: /\.css$/,
+          test: /\.(css|html)$/,
           type: 'asset/resource',
         },
         {
           loader: 'babel-loader',
           options: {
-            plugins: ['@babel/plugin-proposal-class-properties'],
-            presets: ['@babel/preset-react', '@babel/preset-typescript'],
+            configFile: path.resolve(__dirname, '../../babel.config.js'),
           },
           test: /\.(js|ts|tsx)$/,
         },
@@ -35,7 +37,7 @@ function client(
     resolve: {
       extensions: ['.js', '.ts', '.tsx'],
     },
-  };
+  }
 }
 
-export default client;
+export default client

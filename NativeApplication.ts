@@ -2,22 +2,22 @@
  * Copyright 2020 Marek Kobida
  */
 
-import http from 'http';
-import net from 'net';
+import http from 'http'
+import net from 'net'
 
 export interface ClientIPCMessage {
-  application: ReturnType<NativeApplication['toJSON']>;
-  name: 'ADD' | 'AFTER_DELETE';
+  application: ReturnType<NativeApplication['toJSON']>
+  name: 'ADD' | 'AFTER_DELETE'
 }
 
 export interface ServerIPCMessage {
-  name: 'AFTER_ADD' | 'DELETE';
+  name: 'AFTER_ADD' | 'DELETE'
 }
 
 class NativeApplication {
-  httpServer: http.Server;
+  httpServer: http.Server
 
-  httpServerSockets: Set<net.Socket> = new Set();
+  httpServerSockets: Set<net.Socket> = new Set()
 
   constructor(
     readonly description: string,
@@ -25,45 +25,45 @@ class NativeApplication {
     readonly name: string,
     readonly version: string,
   ) {
-    this.httpServer = this.createHttpServer();
+    this.httpServer = this.createHttpServer()
 
     /* ---------------------------------------------------------------- */
 
     process.on('message', (serverIPCMessage: ServerIPCMessage) => {
       if (serverIPCMessage.name === 'AFTER_ADD') {
-        this.afterAdd();
+        this.afterAdd()
       }
 
       if (serverIPCMessage.name === 'DELETE') {
         this.sendIPCMessage({
           application: this.toJSON(),
           name: 'AFTER_DELETE',
-        });
+        })
 
         /* ---------------------------------------------------------------- */
 
-        this.httpServer.close();
+        this.httpServer.close()
 
         /* ---------------------------------------------------------------- */
 
         this.httpServerSockets.forEach(socket => {
-          socket.destroy();
+          socket.destroy()
 
-          this.httpServerSockets.delete(socket);
-        });
+          this.httpServerSockets.delete(socket)
+        })
 
         /* ---------------------------------------------------------------- */
 
-        this.afterDelete();
+        this.afterDelete()
       }
-    });
+    })
 
     /* ---------------------------------------------------------------- */
 
     this.sendIPCMessage({
       application: this.toJSON(),
       name: 'ADD',
-    });
+    })
   }
 
   afterAdd() {}
@@ -72,43 +72,43 @@ class NativeApplication {
 
   private createHttpServer() {
     const httpServer = http.createServer((request, response) => {
-      response.setHeader('Access-Control-Allow-Methods', '*');
-      response.setHeader('Access-Control-Allow-Origin', '*');
+      response.setHeader('Access-Control-Allow-Methods', '*')
+      response.setHeader('Access-Control-Allow-Origin', '*')
 
       if (request.url === '/about') {
-        response.setHeader('Content-Type', 'application/json');
+        response.setHeader('Content-Type', 'application/json')
 
-        response.end(JSON.stringify(this.toJSON()));
+        response.end(JSON.stringify(this.toJSON()))
       }
-    });
+    })
 
     /* ---------------------------------------------------------------- */
 
     httpServer.on('connection', socket => {
-      this.httpServerSockets.add(socket);
+      this.httpServerSockets.add(socket)
 
-      httpServer.once('close', () => this.httpServerSockets.delete(socket));
-    });
-
-    /* ---------------------------------------------------------------- */
-
-    httpServer.listen();
+      httpServer.once('close', () => this.httpServerSockets.delete(socket))
+    })
 
     /* ---------------------------------------------------------------- */
 
-    return httpServer;
+    httpServer.listen()
+
+    /* ---------------------------------------------------------------- */
+
+    return httpServer
   }
 
   private httpServerUrl(): string {
-    const $ = this.httpServer.address();
+    const $ = this.httpServer.address()
 
     return $ !== null && typeof $ === 'object'
       ? `http://127.0.0.1:${$.port}`
-      : this.htmlFileUrl;
+      : this.htmlFileUrl
   }
 
   sendIPCMessage(clientIPCMessage: ClientIPCMessage) {
-    process.send?.(clientIPCMessage);
+    process.send?.(clientIPCMessage)
   }
 
   toJSON() {
@@ -118,16 +118,16 @@ class NativeApplication {
       httpServerUrl: this.httpServerUrl(),
       name: this.name,
       version: this.version,
-    };
+    }
   }
 
   private updateHtmlFileUrl(): string {
-    const htmlFileUrl = new URL(this.htmlFileUrl);
+    const htmlFileUrl = new URL(this.htmlFileUrl)
 
-    htmlFileUrl.searchParams.set('httpServerUrl', this.httpServerUrl());
+    htmlFileUrl.searchParams.set('httpServerUrl', this.httpServerUrl())
 
-    return htmlFileUrl.toString();
+    return htmlFileUrl.toString()
   }
 }
 
-export default NativeApplication;
+export default NativeApplication
