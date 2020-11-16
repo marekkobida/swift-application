@@ -1,7 +1,7 @@
 declare function applications(applicationsToCompile: string[], outputPath: (applicationToCompile: string) => string): ({
     devtool: string;
     entry: string;
-    mode: string;
+    mode: "development";
     module: {
         rules: {
             test: RegExp;
@@ -29,7 +29,7 @@ declare function applications(applicationsToCompile: string[], outputPath: (appl
 } | {
     devtool: string;
     entry: string;
-    mode: string;
+    mode: "development";
     module: {
         rules: ({
             test: RegExp;

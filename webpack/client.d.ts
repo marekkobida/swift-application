@@ -1,7 +1,7 @@
 declare function client(inputFilePath: string, outputFileName: string, outputPath: string): {
     devtool: string;
     entry: string;
-    mode: string;
+    mode: "development";
     module: {
         rules: ({
             test: RegExp;
