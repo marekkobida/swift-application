@@ -1,45 +1,47 @@
+"use strict";
 /*
  * Copyright 2020 Marek Kobida
  */
-
-const path = require('path');
-
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const path_1 = __importDefault(require("path"));
 function client(inputFilePath, outputFileName, outputPath) {
-  return {
-    devtool: 'inline-source-map',
-    entry: inputFilePath,
-    mode: 'development',
-    module: {
-      rules: [
-        {
-          test: /\.(css|html)$/,
-          type: 'asset/resource',
+    return {
+        devtool: 'inline-source-map',
+        entry: inputFilePath,
+        mode: 'development',
+        module: {
+            rules: [
+                {
+                    test: /\.(css|html)$/,
+                    type: 'asset/resource',
+                },
+                {
+                    test: /\.(js|ts|tsx)$/,
+                    use: [
+                        {
+                            loader: 'babel-loader',
+                            options: {
+                                configFile: path_1.default.resolve(__dirname, '../babel.config.js'),
+                            },
+                        },
+                    ],
+                },
+            ],
         },
-        {
-          test: /\.(js|ts|tsx)$/,
-          use: [
-            {
-              loader: 'babel-loader',
-              options: {
-                configFile: path.resolve(__dirname, '../babel.config.js'),
-              },
-            },
-          ],
+        output: {
+            assetModuleFilename: '[name][ext]',
+            filename: outputFileName,
+            path: outputPath,
         },
-      ],
-    },
-    output: {
-      assetModuleFilename: '[name][ext]',
-      filename: outputFileName,
-      path: outputPath,
-    },
-    resolve: {
-      extensions: ['.js', '.ts', '.tsx'],
-    },
-    snapshot: {
-      managedPaths: [],
-    },
-  };
+        resolve: {
+            extensions: ['.js', '.ts', '.tsx'],
+        },
+        snapshot: {
+            managedPaths: [],
+        },
+    };
 }
-
-module.exports = client;
+exports.default = client;

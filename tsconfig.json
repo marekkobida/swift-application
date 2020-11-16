@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "jsx": "react",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "strict": true,
+    "target": "ESNext"
+  },
+  "files": [
+    "./Application.ts",
+    "./compileApplications.ts",
+    "./webpack/application.ts",
+    "./webpack/applications.ts",
+    "./webpack/client.ts"
+  ]
+}
