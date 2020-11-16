@@ -5,9 +5,9 @@ import path from 'path';
 import compileApplications from './webpack/compileApplications';
 
 async function swift() {
-  const { applicationsToCompile } = await import(
-    path.resolve(process.cwd(), './package.json')
-  );
+  const {
+    swift: { applicationsToCompile },
+  } = await import(path.resolve(process.cwd(), './package.json'));
 
   await compileApplications(applicationsToCompile, applicationToCompile =>
     path.resolve(
