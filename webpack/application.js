@@ -4,7 +4,7 @@
 
 const path = require('path');
 
-function server(inputFilePath, outputFileName, outputPath) {
+function application(inputFilePath, outputFileName, outputPath) {
   return {
     devtool: 'inline-source-map',
     entry: inputFilePath,
@@ -30,7 +30,7 @@ function server(inputFilePath, outputFileName, outputPath) {
       path: outputPath,
     },
     resolve: {
-      extensions: ['.ts', '.js'],
+      extensions: ['.js', '.ts'],
     },
     snapshot: {
       managedPaths: [],
@@ -39,4 +39,4 @@ function server(inputFilePath, outputFileName, outputPath) {
   };
 }
 
-module.exports = server;
+module.exports = application;

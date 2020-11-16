@@ -5,11 +5,22 @@
 const fs = require('fs');
 const path = require('path');
 
+const application = require('./application');
 const client = require('./client');
-const server = require('./server');
 
 function applications(applicationsToCompile, outputPath) {
   return [
+    ...applicationsToCompile
+      .filter(applicationToCompile =>
+        fs.existsSync(path.resolve(applicationToCompile, './index.ts')),
+      )
+      .map(applicationToCompile =>
+        application(
+          path.resolve(applicationToCompile, './index.ts'),
+          'index.js',
+          outputPath(applicationToCompile),
+        ),
+      ),
     ...applicationsToCompile
       .filter(applicationToCompile =>
         fs.existsSync(path.resolve(applicationToCompile, './client.tsx')),
@@ -18,17 +29,6 @@ function applications(applicationsToCompile, outputPath) {
         client(
           path.resolve(applicationToCompile, './client.tsx'),
           'client.js',
-          outputPath(applicationToCompile),
-        ),
-      ),
-    ...applicationsToCompile
-      .filter(applicationToCompile =>
-        fs.existsSync(path.resolve(applicationToCompile, './index.ts')),
-      )
-      .map(applicationToCompile =>
-        server(
-          path.resolve(applicationToCompile, './index.ts'),
-          'index.js',
           outputPath(applicationToCompile),
         ),
       ),

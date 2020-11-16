@@ -1,65 +1,35 @@
-/*
- * Copyright 2020 Marek Kobida
- */
-
-import http from 'http';
-import net from 'net';
-
-export interface ClientIPCMessage {
-  application: ReturnType<Application['toJSON']>;
-  name: 'ADD' | 'AFTER_DELETE';
-}
-
-export interface ServerIPCMessage {
-  name: 'AFTER_ADD' | 'DELETE';
-}
+const http = require('http');
 
 class Application {
-  httpServer: http.Server;
-
-  httpServerSockets: Set<net.Socket> = new Set();
-
-  constructor(
-    readonly description: string,
-    readonly htmlFileUrl: string,
-    readonly name: string,
-    readonly version: string,
-  ) {
+  constructor(description, htmlFileUrl, name, version) {
+    this.description = description;
+    this.htmlFileUrl = htmlFileUrl;
+    this.name = name;
+    this.version = version;
+    this.httpServerSockets = new Set();
     this.httpServer = this.createHttpServer();
-
     /* ---------------------------------------------------------------- */
-
-    process.on('message', (serverIPCMessage: ServerIPCMessage) => {
+    process.on('message', serverIPCMessage => {
       if (serverIPCMessage.name === 'AFTER_ADD') {
         this.afterAdd();
       }
-
       if (serverIPCMessage.name === 'DELETE') {
         this.sendIPCMessage({
           application: this.toJSON(),
           name: 'AFTER_DELETE',
         });
-
         /* ---------------------------------------------------------------- */
-
         this.httpServer.close();
-
         /* ---------------------------------------------------------------- */
-
         this.httpServerSockets.forEach(socket => {
           socket.destroy();
-
           this.httpServerSockets.delete(socket);
         });
-
         /* ---------------------------------------------------------------- */
-
         this.afterDelete();
       }
     });
-
     /* ---------------------------------------------------------------- */
-
     this.sendIPCMessage({
       application: this.toJSON(),
       name: 'ADD',
@@ -70,35 +40,27 @@ class Application {
 
   afterDelete() {}
 
-  private createHttpServer() {
+  createHttpServer() {
     const httpServer = http.createServer();
-
     /* ---------------------------------------------------------------- */
-
     httpServer.on('connection', socket => {
       this.httpServerSockets.add(socket);
-
       httpServer.once('close', () => this.httpServerSockets.delete(socket));
     });
-
     /* ---------------------------------------------------------------- */
-
     httpServer.listen();
-
     /* ---------------------------------------------------------------- */
-
     return httpServer;
   }
 
-  private httpServerUrl(): string {
+  httpServerUrl() {
     const $ = this.httpServer.address();
-
     return $ !== null && typeof $ === 'object'
       ? `http://127.0.0.1:${$.port}`
       : this.htmlFileUrl;
   }
 
-  sendIPCMessage(clientIPCMessage: ClientIPCMessage) {
+  sendIPCMessage(clientIPCMessage) {
     process.send?.(clientIPCMessage);
   }
 
@@ -112,13 +74,11 @@ class Application {
     };
   }
 
-  private updateHtmlFileUrl(): string {
+  updateHtmlFileUrl() {
     const htmlFileUrl = new URL(this.htmlFileUrl);
-
     htmlFileUrl.searchParams.set('httpServerUrl', this.httpServerUrl());
-
     return htmlFileUrl.toString();
   }
 }
 
-export default Application;
+module.exports = Application;
