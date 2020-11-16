@@ -21,13 +21,8 @@ async function compileApplications(applicationsToCompile, outputPath) {
                 .filter(applicationToCompile => fs_1.default.existsSync(path_1.default.resolve(applicationToCompile.path, './index.ts')))
                 .map(applicationToCompile => application_1.default(path_1.default.resolve(applicationToCompile.path, './index.ts'), './index.js', outputPath(applicationToCompile))),
         ]);
-        /* ---------------------------------------------------------------- */
         compiler.run((...parameters) => {
-            parameters[1]?.stats.forEach(({ compilation }) => {
-                compilation.emittedAssets.forEach(emittedAsset => console.log(path_1.default.resolve(compilation.compiler.outputPath, emittedAsset)));
-                compilation.errors.forEach(error => console.log(`\x1b[31m${error.message}\x1b[0m`));
-            });
-            /* ---------------------------------------------------------------- */
+            console.log(parameters[1]?.toString({ colors: true }));
             afterCompilation();
         });
     });

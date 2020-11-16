@@ -1,5 +1,6 @@
-export interface ApplicationToCompile {
+declare function compileApplications(applicationsToCompile: {
     path: string;
-}
-declare function compileApplications(applicationsToCompile: ApplicationToCompile[], outputPath: (applicationToCompile: ApplicationToCompile) => ApplicationToCompile['path']): Promise<unknown>;
+}[], outputPath: (applicationToCompile: {
+    path: string;
+}) => string): Promise<unknown>;
 export default compileApplications;

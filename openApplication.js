@@ -10,13 +10,11 @@ const path_1 = __importDefault(require("path"));
 const compileApplications_1 = __importDefault(require("./webpack/compileApplications"));
 async function openApplication() {
     let applicationToCompilePath = process.argv[2];
-    /* ---------------------------------------------------------------- */
     if (fs_1.default.existsSync(path_1.default.resolve(applicationToCompilePath, './index.ts'))) {
         const outputPath = path_1.default.resolve(os_1.default.tmpdir(), './applications', path_1.default.basename(applicationToCompilePath));
         await compileApplications_1.default([{ path: applicationToCompilePath }], () => outputPath);
         applicationToCompilePath = outputPath;
     }
-    /* ---------------------------------------------------------------- */
     let application = require(path_1.default.resolve(applicationToCompilePath, './index.js')).default;
     new application();
 }
