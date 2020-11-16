@@ -72,6 +72,9 @@ class NativeApplication {
 
   private createHttpServer() {
     const httpServer = http.createServer((request, response) => {
+      response.setHeader('Access-Control-Allow-Methods', '*');
+      response.setHeader('Access-Control-Allow-Origin', '*');
+
       if (request.url === '/about') {
         response.setHeader('Content-Type', 'application/json');
 
