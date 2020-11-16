@@ -18,28 +18,21 @@ function compileApplications(
 
   const compiler = webpack(applications(applicationsToCompile, outputPath));
 
-  compiler.run((error, compilation) => {
-    if (compilation) {
-      const json = compilation.toJson() as webpack.Compilation;
-
-      if (compilation.hasErrors()) {
-        json.errors.forEach((error, i) =>
-          console.log(`[${i + 1}] \x1b[31m${error.message}\x1b[0m`),
-        );
-      }
-
-      json.children.forEach((child, i) =>
-        child.assets.forEach((asset, ii) =>
+  compiler.run((error, $) => {
+    if ($) {
+      $.stats.forEach(({ compilation }) => {
+        compilation.emittedAssets.forEach(emittedAsset =>
           console.log(
-            `[${i + 1}][${ii + 1}] ${path.resolve(
-              child.outputPath,
-              asset.name,
-            )}`,
+            path.resolve(compilation.compiler.outputPath, emittedAsset),
           ),
-        ),
-      );
+        );
 
-      afterCompilation(error, compilation);
+        compilation.errors.forEach(error =>
+          console.log(`\x1b[31m${error.message}\x1b[0m`),
+        );
+      });
+
+      afterCompilation();
     }
   });
 }

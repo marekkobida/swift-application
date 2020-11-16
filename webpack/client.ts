@@ -10,7 +10,7 @@ function client(
   return {
     devtool: 'inline-source-map',
     entry: inputFilePath,
-    mode: 'development',
+    mode: 'development' as const,
     module: {
       rules: [
         {
