@@ -13,6 +13,7 @@
   },
   "files": [
     "./Application.ts",
+    "./NativeApplication.ts",
     "./openApplication.ts",
     "./swift.ts",
     "./webpack/application.ts",
