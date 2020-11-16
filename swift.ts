@@ -9,6 +9,8 @@ async function swift() {
     swift: { applicationsToCompile },
   } = await import(path.resolve(process.cwd(), './package.json'));
 
+  /* ---------------------------------------------------------------- */
+
   await compileApplications(applicationsToCompile, applicationToCompile =>
     path.resolve(
       process.cwd(),

@@ -6,42 +6,29 @@ import path from 'path';
 
 import compileApplications from './webpack/compileApplications';
 
-const APPLICATION_PATH = process.argv[2];
-
-const APPLICATION_NAME = path.basename(APPLICATION_PATH);
-
-const APPLICATION_TS_FILE_PATH = path.resolve(APPLICATION_PATH, './index.ts');
-
-const OUTPUT_PATH = path.resolve(
-  os.tmpdir(),
-  './applications',
-  APPLICATION_NAME,
-);
-
 async function openApplication() {
-  if (path.isAbsolute(APPLICATION_PATH)) {
-    if (fs.existsSync(APPLICATION_TS_FILE_PATH)) {
-      await compileApplications([APPLICATION_PATH], () => OUTPUT_PATH);
+  let applicationToCompile = process.argv[2];
 
-      let application = require(path.resolve(OUTPUT_PATH, './index.js'))
-        .default;
+  /* ---------------------------------------------------------------- */
 
-      new application();
+  if (fs.existsSync(path.resolve(applicationToCompile, './index.ts'))) {
+    const outputPath = path.resolve(
+      os.tmpdir(),
+      './applications',
+      path.basename(applicationToCompile),
+    );
 
-      return;
-    }
+    await compileApplications([applicationToCompile], () => outputPath);
 
-    let application = require(path.resolve(APPLICATION_PATH, './index.js'))
-      .default;
-
-    new application();
-
-    return;
+    applicationToCompile = outputPath;
   }
 
-  throw new Error(
-    `The application path "${APPLICATION_PATH}" is not absolute.`,
-  );
+  /* ---------------------------------------------------------------- */
+
+  let application = require(path.resolve(applicationToCompile, './index.js'))
+    .default;
+
+  new application();
 }
 
 openApplication();
