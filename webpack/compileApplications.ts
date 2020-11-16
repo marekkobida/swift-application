@@ -13,14 +13,9 @@ async function compileApplications(
   outputPath: (applicationToCompile: string) => string,
 ) {
   return new Promise(afterCompilation => {
-    applicationsToCompile.forEach(applicationToCompile => {
-      fs.copyFileSync(
-        path.resolve(applicationToCompile, './client.html'),
-        path.resolve(outputPath(applicationToCompile), './client.html'),
-      );
-    });
-
     const compiler = webpack(applications(applicationsToCompile, outputPath));
+
+    /* ---------------------------------------------------------------- */
 
     compiler.run((error, $) => {
       if ($) {
@@ -35,6 +30,19 @@ async function compileApplications(
             console.log(`\x1b[31m${error.message}\x1b[0m`),
           );
         });
+
+        /* ---------------------------------------------------------------- */
+
+        try {
+          applicationsToCompile.forEach(applicationToCompile =>
+            fs.copyFileSync(
+              path.resolve(applicationToCompile, './client.html'),
+              path.resolve(outputPath(applicationToCompile), './client.html'),
+            ),
+          );
+        } catch (error) {}
+
+        /* ---------------------------------------------------------------- */
 
         afterCompilation();
       }
