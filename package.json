@@ -1,9 +1,6 @@
 {
-  "APPLICATION_CLIENT_JS_FILE_NAME": "client.js",
-  "APPLICATION_CLIENT_TSX_FILE_NAME": "client.tsx",
-  "APPLICATION_JS_FILE_NAME": "index.js",
-  "APPLICATION_TS_FILE_NAME": "index.ts",
   "bin": {
+    "open-application": "openApplication.js",
     "swift": "swift.js"
   },
   "dependencies": {
