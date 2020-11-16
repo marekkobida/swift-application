@@ -71,7 +71,13 @@ class Application {
   afterDelete() {}
 
   private createHttpServer() {
-    const httpServer = http.createServer();
+    const httpServer = http.createServer((request, response) => {
+      if (request.url === '/about') {
+        response.setHeader('Content-Type', 'application/json');
+
+        response.end(JSON.stringify(this.toJSON()));
+      }
+    });
 
     /* ---------------------------------------------------------------- */
 

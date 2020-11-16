@@ -45,7 +45,12 @@ class Application {
     afterAdd() { }
     afterDelete() { }
     createHttpServer() {
-        const httpServer = http_1.default.createServer();
+        const httpServer = http_1.default.createServer((request, response) => {
+            if (request.url === '/about') {
+                response.setHeader('Content-Type', 'application/json');
+                response.end(JSON.stringify(this.toJSON()));
+            }
+        });
         /* ---------------------------------------------------------------- */
         httpServer.on('connection', socket => {
             this.httpServerSockets.add(socket);
