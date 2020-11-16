@@ -46,6 +46,8 @@ class NativeApplication {
     afterDelete() { }
     createHttpServer() {
         const httpServer = http_1.default.createServer((request, response) => {
+            response.setHeader('Access-Control-Allow-Methods', '*');
+            response.setHeader('Access-Control-Allow-Origin', '*');
             if (request.url === '/about') {
                 response.setHeader('Content-Type', 'application/json');
                 response.end(JSON.stringify(this.toJSON()));
