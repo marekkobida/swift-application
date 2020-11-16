@@ -6,8 +6,8 @@ class Application {
     this.htmlFileUrl = htmlFileUrl;
     this.name = name;
     this.version = version;
-    this.httpServerSockets = new Set();
     this.httpServer = this.createHttpServer();
+    this.httpServerSockets = new Set();
     /* ---------------------------------------------------------------- */
     process.on('message', serverIPCMessage => {
       if (serverIPCMessage.name === 'AFTER_ADD') {

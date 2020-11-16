@@ -12,6 +12,10 @@ function compileApplications(
   outputPath,
   afterCompilation,
 ) {
+  if (typeof applicationsToCompile === 'string') {
+    applicationsToCompile = [applicationsToCompile];
+  }
+
   const compiler = webpack(applications(applicationsToCompile, outputPath));
 
   compiler.run((error, compilation) => {
