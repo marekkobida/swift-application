@@ -4,14 +4,14 @@
 
 import webpack from 'webpack';
 
-import createConfiguration from './createConfiguration';
+import createApplicationConfiguration from './createApplicationConfiguration';
 
 async function compileApplications(
   applications: string[],
   outputPath: (applicationPath: string) => string
 ): Promise<string[]> {
   return new Promise($ => {
-    const configuration = createConfiguration(applications, outputPath);
+    const configuration = createApplicationConfiguration(applications, outputPath);
 
     if (configuration.length > 0) {
       const compiler = webpack(configuration);

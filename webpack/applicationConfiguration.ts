@@ -4,7 +4,7 @@
 
 import webpack from 'webpack';
 
-function client(
+function applicationConfiguration(
   inputFilePath: string,
   outputFileName: string,
   outputPath: string
@@ -16,29 +16,26 @@ function client(
     module: {
       rules: [
         {
-          test: /\.(css|html)$/,
-          type: 'asset/resource',
-        },
-        {
           loader: 'babel-loader',
           options: {
             plugins: ['@babel/plugin-proposal-class-properties'],
             presets: ['@babel/preset-react', '@babel/preset-typescript'],
           },
-          test: /\.(js|ts|tsx)$/,
+          test: /\.(js|ts)$/,
         },
       ],
     },
-    name: 'client',
+    name: 'application',
     output: {
-      assetModuleFilename: '[name][ext]',
       filename: outputFileName,
+      libraryTarget: 'commonjs',
       path: outputPath,
     },
     resolve: {
-      extensions: ['.js', '.ts', '.tsx'],
+      extensions: ['.js', '.ts'],
     },
+    target: 'node',
   };
 }
 
-export default client;
+export default applicationConfiguration;

@@ -6,10 +6,10 @@ import fs from 'fs';
 import path from 'path';
 import webpack from 'webpack';
 
-import application from './application';
-import client from './client';
+import applicationClientConfigurationTs from './applicationClientConfiguration.ts';
+import applicationConfiguration from './applicationConfiguration';
 
-function createConfiguration(
+function createApplicationConfiguration(
   applications: string[],
   outputPath: (applicationPath: string) => string
 ): webpack.Configuration[] {
@@ -19,7 +19,7 @@ function createConfiguration(
         return fs.existsSync(path.resolve(applicationPath, './client.tsx'));
       })
       .map(applicationPath => {
-        return client(
+        return applicationClientConfigurationTs(
           path.resolve(applicationPath, './client.tsx'),
           'client.js',
           outputPath(applicationPath)
@@ -30,7 +30,7 @@ function createConfiguration(
         return fs.existsSync(path.resolve(applicationPath, './index.ts'));
       })
       .map(applicationPath => {
-        return application(
+        return applicationConfiguration(
           path.resolve(applicationPath, './index.ts'),
           'index.js',
           outputPath(applicationPath)
@@ -39,4 +39,4 @@ function createConfiguration(
   ];
 }
 
-export default createConfiguration;
+export default createApplicationConfiguration;
