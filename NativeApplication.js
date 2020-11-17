@@ -64,9 +64,9 @@ class NativeApplication {
         return httpServer;
     }
     httpServerUrl() {
-        const $ = this.httpServer.address();
-        return $ !== null && typeof $ === 'object'
-            ? `http://127.0.0.1:${$.port}`
+        const httpServerAddress = this.httpServer.address();
+        return httpServerAddress !== null && typeof httpServerAddress === 'object'
+            ? `http://127.0.0.1:${httpServerAddress.port}`
             : this.htmlFileUrl;
     }
     sendIPCMessage(clientIPCMessage) {

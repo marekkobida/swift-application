@@ -15,11 +15,19 @@ async function compileApplications(applicationsToCompile, outputPath) {
     return new Promise(afterCompilation => {
         const compiler = webpack_1.default([
             ...applicationsToCompile
-                .filter(applicationToCompile => fs_1.default.existsSync(path_1.default.resolve(applicationToCompile.path, './client.tsx')))
-                .map(applicationToCompile => client_1.default(path_1.default.resolve(applicationToCompile.path, './client.tsx'), './client.js', outputPath(applicationToCompile))),
+                .filter(applicationToCompile => {
+                return fs_1.default.existsSync(path_1.default.resolve(applicationToCompile.path, './client.tsx'));
+            })
+                .map(applicationToCompile => {
+                return client_1.default(path_1.default.resolve(applicationToCompile.path, './client.tsx'), './client.js', outputPath(applicationToCompile));
+            }),
             ...applicationsToCompile
-                .filter(applicationToCompile => fs_1.default.existsSync(path_1.default.resolve(applicationToCompile.path, './index.ts')))
-                .map(applicationToCompile => application_1.default(path_1.default.resolve(applicationToCompile.path, './index.ts'), './index.js', outputPath(applicationToCompile))),
+                .filter(applicationToCompile => {
+                return fs_1.default.existsSync(path_1.default.resolve(applicationToCompile.path, './index.ts'));
+            })
+                .map(applicationToCompile => {
+                return application_1.default(path_1.default.resolve(applicationToCompile.path, './index.ts'), './index.js', outputPath(applicationToCompile));
+            }),
         ]);
         compiler.run((...parameters) => {
             console.log(parameters[1]?.toString({ colors: true }));
