@@ -25,6 +25,7 @@ function application(
         },
       ],
     },
+    name: 'application',
     output: {
       filename: outputFileName,
       libraryTarget: 'commonjs',

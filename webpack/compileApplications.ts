@@ -2,46 +2,16 @@
  * Copyright 2020 Marek Kobida
  */
 
-import fs from 'fs';
-import path from 'path';
 import webpack from 'webpack';
 
-import application from './application';
-import client from './client';
-
-type ApplicationToCompile = { path: string };
-
-type ApplicationsToCompile = ApplicationToCompile[];
+import createConfiguration from './createConfiguration';
 
 async function compileApplications(
-  applications: ApplicationsToCompile,
-  outputPath: (application: ApplicationToCompile) => ApplicationToCompile['path']
-): Promise<ApplicationsToCompile> {
+  applications: string[],
+  outputPath: (applicationPath: string) => string
+): Promise<string[]> {
   return new Promise($ => {
-    const configuration = [
-      ...applications
-        .filter(applicationToCompile => {
-          return fs.existsSync(path.resolve(applicationToCompile.path, './client.tsx'));
-        })
-        .map(applicationToCompile => {
-          return client(
-            path.resolve(applicationToCompile.path, './client.tsx'),
-            'client.js',
-            outputPath(applicationToCompile)
-          );
-        }),
-      ...applications
-        .filter(applicationToCompile => {
-          return fs.existsSync(path.resolve(applicationToCompile.path, './index.ts'));
-        })
-        .map(applicationToCompile => {
-          return application(
-            path.resolve(applicationToCompile.path, './index.ts'),
-            'index.js',
-            outputPath(applicationToCompile)
-          );
-        }),
-    ];
+    const configuration = createConfiguration(applications, outputPath);
 
     if (configuration.length > 0) {
       const compiler = webpack(configuration);
@@ -49,12 +19,7 @@ async function compileApplications(
       compiler.run((error, compilation) => {
         console.log(compilation?.toString({ colors: true }));
 
-        $(
-          applications.map(applicationToCompile => {
-            applicationToCompile.path = outputPath(applicationToCompile);
-            return applicationToCompile;
-          })
-        );
+        $(applications.map(applicationPath => outputPath(applicationPath)));
       });
 
       return;

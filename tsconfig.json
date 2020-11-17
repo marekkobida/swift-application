@@ -10,13 +10,5 @@
     "resolveJsonModule": true,
     "strict": true,
     "target": "ESNext"
-  },
-  "files": [
-    "./NativeApplication.ts",
-    "./openApplication.ts",
-    "./swift.ts",
-    "./webpack/application.ts",
-    "./webpack/client.ts",
-    "./webpack/compileApplications.ts"
-  ]
+  }
 }
