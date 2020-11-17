@@ -9,41 +9,58 @@ import webpack from 'webpack';
 import application from './application';
 import client from './client';
 
+type ApplicationToCompile = { path: string };
+
+type ApplicationsToCompile = ApplicationToCompile[];
+
 async function compileApplications(
-  applicationsToCompile: { path: string }[],
-  outputPath: (applicationToCompile: { path: string }) => string
-) {
-  return new Promise(afterCompilation => {
-    const compiler = webpack([
-      ...applicationsToCompile
+  applications: ApplicationsToCompile,
+  outputPath: (application: ApplicationToCompile) => ApplicationToCompile['path']
+): Promise<ApplicationsToCompile> {
+  return new Promise($ => {
+    const configuration = [
+      ...applications
         .filter(applicationToCompile => {
           return fs.existsSync(path.resolve(applicationToCompile.path, './client.tsx'));
         })
         .map(applicationToCompile => {
           return client(
             path.resolve(applicationToCompile.path, './client.tsx'),
-            './client.js',
+            'client.js',
             outputPath(applicationToCompile)
           );
         }),
-      ...applicationsToCompile
+      ...applications
         .filter(applicationToCompile => {
           return fs.existsSync(path.resolve(applicationToCompile.path, './index.ts'));
         })
         .map(applicationToCompile => {
           return application(
             path.resolve(applicationToCompile.path, './index.ts'),
-            './index.js',
+            'index.js',
             outputPath(applicationToCompile)
           );
         }),
-    ]);
+    ];
 
-    compiler.run((...parameters) => {
-      console.log(parameters[1]?.toString({ colors: true }));
+    if (configuration.length > 0) {
+      const compiler = webpack(configuration);
 
-      afterCompilation();
-    });
+      compiler.run((error, compilation) => {
+        console.log(compilation?.toString({ colors: true }));
+
+        $(
+          applications.map(applicationToCompile => {
+            applicationToCompile.path = outputPath(applicationToCompile);
+            return applicationToCompile;
+          })
+        );
+      });
+
+      return;
+    }
+
+    $(applications);
   });
 }
 

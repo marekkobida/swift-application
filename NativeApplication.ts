@@ -27,24 +27,18 @@ class NativeApplication {
   ) {
     this.httpServer = this.createHttpServer();
 
-    /* ---------------------------------------------------------------- */
-
     process.on('message', (serverIPCMessage: ServerIPCMessage) => {
       if (serverIPCMessage.name === 'AFTER_ADD') {
         this.afterAdd();
       }
 
       if (serverIPCMessage.name === 'DELETE') {
-        this.sendIPCMessage({
+        NativeApplication.sendIPCMessage({
           application: this.toJSON(),
           name: 'AFTER_DELETE',
         });
 
-        /* ---------------------------------------------------------------- */
-
         this.httpServer.close();
-
-        /* ---------------------------------------------------------------- */
 
         this.httpServerSockets.forEach(socket => {
           socket.destroy();
@@ -52,15 +46,11 @@ class NativeApplication {
           this.httpServerSockets.delete(socket);
         });
 
-        /* ---------------------------------------------------------------- */
-
         this.afterDelete();
       }
     });
 
-    /* ---------------------------------------------------------------- */
-
-    this.sendIPCMessage({
+    NativeApplication.sendIPCMessage({
       application: this.toJSON(),
       name: 'ADD',
     });
@@ -82,19 +72,13 @@ class NativeApplication {
       }
     });
 
-    /* ---------------------------------------------------------------- */
-
     httpServer.on('connection', socket => {
       this.httpServerSockets.add(socket);
 
       httpServer.once('close', () => this.httpServerSockets.delete(socket));
     });
 
-    /* ---------------------------------------------------------------- */
-
     httpServer.listen();
-
-    /* ---------------------------------------------------------------- */
 
     return httpServer;
   }
@@ -104,10 +88,10 @@ class NativeApplication {
 
     return httpServerAddress !== null && typeof httpServerAddress === 'object'
       ? `http://127.0.0.1:${httpServerAddress.port}`
-      : this.htmlFileUrl;
+      : 'http://127.0.0.1';
   }
 
-  sendIPCMessage(clientIPCMessage: ClientIPCMessage) {
+  private static sendIPCMessage(clientIPCMessage: ClientIPCMessage) {
     process.send?.(clientIPCMessage);
   }
 
