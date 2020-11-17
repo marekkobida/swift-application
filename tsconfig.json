@@ -12,7 +12,6 @@
     "target": "ESNext"
   },
   "files": [
-    "./Application.ts",
     "./NativeApplication.ts",
     "./openApplication.ts",
     "./swift.ts",

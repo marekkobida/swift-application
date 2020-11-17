@@ -2,51 +2,49 @@
  * Copyright 2020 Marek Kobida
  */
 
-import fs from 'fs'
-import path from 'path'
-import webpack from 'webpack'
+import fs from 'fs';
+import path from 'path';
+import webpack from 'webpack';
 
-import application from './application'
-import client from './client'
+import application from './application';
+import client from './client';
 
 async function compileApplications(
   applicationsToCompile: { path: string }[],
-  outputPath: (applicationToCompile: { path: string }) => string,
+  outputPath: (applicationToCompile: { path: string }) => string
 ) {
   return new Promise(afterCompilation => {
     const compiler = webpack([
       ...applicationsToCompile
-        .filter(applicationToCompile =>
-          fs.existsSync(
-            path.resolve(applicationToCompile.path, './client.tsx'),
-          ),
-        )
-        .map(applicationToCompile =>
-          client(
+        .filter(applicationToCompile => {
+          return fs.existsSync(path.resolve(applicationToCompile.path, './client.tsx'));
+        })
+        .map(applicationToCompile => {
+          return client(
             path.resolve(applicationToCompile.path, './client.tsx'),
             './client.js',
-            outputPath(applicationToCompile),
-          ),
-        ),
+            outputPath(applicationToCompile)
+          );
+        }),
       ...applicationsToCompile
-        .filter(applicationToCompile =>
-          fs.existsSync(path.resolve(applicationToCompile.path, './index.ts')),
-        )
-        .map(applicationToCompile =>
-          application(
+        .filter(applicationToCompile => {
+          return fs.existsSync(path.resolve(applicationToCompile.path, './index.ts'));
+        })
+        .map(applicationToCompile => {
+          return application(
             path.resolve(applicationToCompile.path, './index.ts'),
             './index.js',
-            outputPath(applicationToCompile),
-          ),
-        ),
-    ])
+            outputPath(applicationToCompile)
+          );
+        }),
+    ]);
 
     compiler.run((...parameters) => {
-      console.log(parameters[1]?.toString({ colors: true }))
+      console.log(parameters[1]?.toString({ colors: true }));
 
-      afterCompilation()
-    })
-  })
+      afterCompilation();
+    });
+  });
 }
 
-export default compileApplications
+export default compileApplications;

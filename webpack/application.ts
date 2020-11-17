@@ -2,13 +2,12 @@
  * Copyright 2020 Marek Kobida
  */
 
-import path from 'path'
-import webpack from 'webpack'
+import webpack from 'webpack';
 
 function application(
   inputFilePath: string,
   outputFileName: string,
-  outputPath: string,
+  outputPath: string
 ): webpack.Configuration {
   return {
     devtool: 'inline-source-map',
@@ -19,7 +18,8 @@ function application(
         {
           loader: 'babel-loader',
           options: {
-            configFile: path.resolve(__dirname, '../../babel.config.js'),
+            plugins: ['@babel/plugin-proposal-class-properties'],
+            presets: ['@babel/preset-react', '@babel/preset-typescript'],
           },
           test: /\.(js|ts)$/,
         },
@@ -34,7 +34,7 @@ function application(
       extensions: ['.js', '.ts'],
     },
     target: 'node',
-  }
+  };
 }
 
-export default application
+export default application;
