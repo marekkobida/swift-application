@@ -2,16 +2,13 @@
  * Copyright 2020 Marek Kobida
  */
 
+import path from 'path';
 import webpack from 'webpack';
 
-function applicationConfiguration(
-  inputFilePath: string,
-  outputFileName: string,
-  outputPath: string
-): webpack.Configuration {
+function applicationConfiguration(inputPath: string, outputPath: string): webpack.Configuration {
   return {
     devtool: 'inline-source-map',
-    entry: inputFilePath,
+    entry: path.resolve(inputPath, './index.ts'),
     mode: 'development' as const,
     module: {
       rules: [
@@ -27,7 +24,7 @@ function applicationConfiguration(
     },
     name: 'application',
     output: {
-      filename: outputFileName,
+      filename: 'index.js',
       libraryTarget: 'commonjs',
       path: outputPath,
     },

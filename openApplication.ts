@@ -4,12 +4,22 @@ import os from 'os';
 import path from 'path';
 
 import compileApplications from './webpack/compileApplications';
-import uuid4 from './uuid4';
 
 const applicationPath = process.argv[2];
 
-const outputPath = path.resolve(os.tmpdir(), uuid4());
+const outputPath = path.resolve(os.tmpdir(), path.basename(applicationPath));
 
 compileApplications([applicationPath], () => outputPath)
-  .then(([applicationPath]) => import(path.resolve(applicationPath, './index.js')))
-  .then(application => new application.default());
+  .then(() => import(path.resolve(outputPath, './index.js')))
+  .then(application => {
+    if (typeof application.default === 'function') {
+      new application.default();
+    } else {
+      return import(path.resolve(applicationPath, './index.js'));
+    }
+  })
+  .then(application => {
+    if (typeof application.default === 'function') {
+      new application.default();
+    }
+  });

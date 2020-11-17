@@ -2,16 +2,16 @@
  * Copyright 2020 Marek Kobida
  */
 
+import path from 'path';
 import webpack from 'webpack';
 
-function applicationClientConfigurationTs(
-  inputFilePath: string,
-  outputFileName: string,
+function applicationClientConfiguration(
+  inputPath: string,
   outputPath: string
 ): webpack.Configuration {
   return {
     devtool: 'inline-source-map',
-    entry: inputFilePath,
+    entry: path.resolve(inputPath, './client.tsx'),
     mode: 'development' as const,
     module: {
       rules: [
@@ -32,7 +32,7 @@ function applicationClientConfigurationTs(
     name: 'client',
     output: {
       assetModuleFilename: '[name][ext]',
-      filename: outputFileName,
+      filename: 'client.js',
       path: outputPath,
     },
     resolve: {
@@ -41,4 +41,4 @@ function applicationClientConfigurationTs(
   };
 }
 
-export default applicationClientConfigurationTs;
+export default applicationClientConfiguration;
