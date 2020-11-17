@@ -27,9 +27,11 @@ const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
 const compileApplications_1 = __importDefault(require("./webpack/compileApplications"));
 const applicationPath = process.argv[2];
-const outputPath = path_1.default.resolve(os_1.default.tmpdir(), path_1.default.basename(applicationPath));
-compileApplications_1.default([applicationPath], () => outputPath)
-    .then(() => Promise.resolve().then(() => __importStar(require(path_1.default.resolve(outputPath, './index.js')))))
+const outputPath = os_1.default.tmpdir();
+compileApplications_1.default([applicationPath], outputPath)
+    .then(({ children: [{ outputPath }] }) => {
+    return Promise.resolve().then(() => __importStar(require(path_1.default.resolve(outputPath, './index.js'))));
+})
     .then(application => {
     if (typeof application.default === 'function') {
         new application.default();
@@ -39,7 +41,7 @@ compileApplications_1.default([applicationPath], () => outputPath)
     }
 })
     .then(application => {
-    if (typeof application.default === 'function') {
+    if (typeof application?.default === 'function') {
         new application.default();
     }
 });
