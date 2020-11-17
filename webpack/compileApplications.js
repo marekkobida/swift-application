@@ -7,10 +7,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const webpack_1 = __importDefault(require("webpack"));
-const createApplicationConfiguration_1 = __importDefault(require("./createApplicationConfiguration"));
-async function compileApplications(applications, outputPath) {
+const test_1 = __importDefault(require("./test"));
+const applicationClientConfiguration_1 = __importDefault(require("./applicationClientConfiguration"));
+const applicationConfiguration_1 = __importDefault(require("./applicationConfiguration"));
+const test = new test_1.default([applicationClientConfiguration_1.default, applicationConfiguration_1.default]);
+function compileApplications(applications, outputPath) {
     return new Promise(afterCompilation => {
-        const configuration = createApplicationConfiguration_1.default(applications, outputPath);
+        const configuration = test.test(applications, outputPath);
         const compiler = webpack_1.default(configuration);
         compiler.run((error, compilation) => {
             console.log(compilation?.toString({ colors: true }));
