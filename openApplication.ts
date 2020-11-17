@@ -7,10 +7,12 @@ import compileApplications from './webpack/compileApplications';
 
 const applicationPath = process.argv[2];
 
-const outputPath = path.resolve(os.tmpdir(), path.basename(applicationPath));
+const outputPath = os.tmpdir();
 
-compileApplications([applicationPath], () => outputPath)
-  .then(() => import(path.resolve(outputPath, './index.js')))
+compileApplications([applicationPath], outputPath)
+  .then(({ children: [{ outputPath }] }) => {
+    return import(path.resolve(outputPath, './index.js'));
+  })
   .then(application => {
     if (typeof application.default === 'function') {
       new application.default();
@@ -19,7 +21,7 @@ compileApplications([applicationPath], () => outputPath)
     }
   })
   .then(application => {
-    if (typeof application.default === 'function') {
+    if (typeof application?.default === 'function') {
       new application.default();
     }
   });

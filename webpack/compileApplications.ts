@@ -8,9 +8,9 @@ import createApplicationConfiguration from './createApplicationConfiguration';
 
 async function compileApplications(
   applications: string[],
-  outputPath: (applicationPath: string) => string
-) {
-  return new Promise($ => {
+  outputPath: string
+): Promise<{ children: { outputPath: string }[] }> {
+  return new Promise(afterCompilation => {
     const configuration = createApplicationConfiguration(applications, outputPath);
 
     const compiler = webpack(configuration);
@@ -18,7 +18,7 @@ async function compileApplications(
     compiler.run((error, compilation) => {
       console.log(compilation?.toString({ colors: true }));
 
-      $();
+      afterCompilation(compilation?.toJson());
     });
   });
 }
