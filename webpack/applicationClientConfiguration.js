@@ -2,11 +2,15 @@
 /*
  * Copyright 2020 Marek Kobida
  */
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-function client(inputFilePath, outputFileName, outputPath) {
+const path_1 = __importDefault(require("path"));
+function applicationClientConfiguration(inputPath, outputPath) {
     return {
         devtool: 'inline-source-map',
-        entry: inputFilePath,
+        entry: path_1.default.resolve(inputPath, './client.tsx'),
         mode: 'development',
         module: {
             rules: [
@@ -27,7 +31,7 @@ function client(inputFilePath, outputFileName, outputPath) {
         name: 'client',
         output: {
             assetModuleFilename: '[name][ext]',
-            filename: outputFileName,
+            filename: 'client.js',
             path: outputPath,
         },
         resolve: {
@@ -35,4 +39,4 @@ function client(inputFilePath, outputFileName, outputPath) {
         },
     };
 }
-exports.default = client;
+exports.default = applicationClientConfiguration;
