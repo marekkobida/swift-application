@@ -15,29 +15,24 @@ class NativeApplication {
         this.version = version;
         this.httpServerSockets = new Set();
         this.httpServer = this.createHttpServer();
-        /* ---------------------------------------------------------------- */
         process.on('message', (serverIPCMessage) => {
             if (serverIPCMessage.name === 'AFTER_ADD') {
                 this.afterAdd();
             }
             if (serverIPCMessage.name === 'DELETE') {
-                this.sendIPCMessage({
+                NativeApplication.sendIPCMessage({
                     application: this.toJSON(),
                     name: 'AFTER_DELETE',
                 });
-                /* ---------------------------------------------------------------- */
                 this.httpServer.close();
-                /* ---------------------------------------------------------------- */
                 this.httpServerSockets.forEach(socket => {
                     socket.destroy();
                     this.httpServerSockets.delete(socket);
                 });
-                /* ---------------------------------------------------------------- */
                 this.afterDelete();
             }
         });
-        /* ---------------------------------------------------------------- */
-        this.sendIPCMessage({
+        NativeApplication.sendIPCMessage({
             application: this.toJSON(),
             name: 'ADD',
         });
@@ -53,23 +48,20 @@ class NativeApplication {
                 response.end(JSON.stringify(this.toJSON()));
             }
         });
-        /* ---------------------------------------------------------------- */
         httpServer.on('connection', socket => {
             this.httpServerSockets.add(socket);
             httpServer.once('close', () => this.httpServerSockets.delete(socket));
         });
-        /* ---------------------------------------------------------------- */
         httpServer.listen();
-        /* ---------------------------------------------------------------- */
         return httpServer;
     }
     httpServerUrl() {
         const httpServerAddress = this.httpServer.address();
         return httpServerAddress !== null && typeof httpServerAddress === 'object'
             ? `http://127.0.0.1:${httpServerAddress.port}`
-            : this.htmlFileUrl;
+            : 'http://127.0.0.1';
     }
-    sendIPCMessage(clientIPCMessage) {
+    static sendIPCMessage(clientIPCMessage) {
         process.send?.(clientIPCMessage);
     }
     toJSON() {

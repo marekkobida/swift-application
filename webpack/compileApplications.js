@@ -11,28 +11,36 @@ const path_1 = __importDefault(require("path"));
 const webpack_1 = __importDefault(require("webpack"));
 const application_1 = __importDefault(require("./application"));
 const client_1 = __importDefault(require("./client"));
-async function compileApplications(applicationsToCompile, outputPath) {
-    return new Promise(afterCompilation => {
-        const compiler = webpack_1.default([
-            ...applicationsToCompile
+async function compileApplications(applications, outputPath) {
+    return new Promise($ => {
+        const configuration = [
+            ...applications
                 .filter(applicationToCompile => {
                 return fs_1.default.existsSync(path_1.default.resolve(applicationToCompile.path, './client.tsx'));
             })
                 .map(applicationToCompile => {
-                return client_1.default(path_1.default.resolve(applicationToCompile.path, './client.tsx'), './client.js', outputPath(applicationToCompile));
+                return client_1.default(path_1.default.resolve(applicationToCompile.path, './client.tsx'), 'client.js', outputPath(applicationToCompile));
             }),
-            ...applicationsToCompile
+            ...applications
                 .filter(applicationToCompile => {
                 return fs_1.default.existsSync(path_1.default.resolve(applicationToCompile.path, './index.ts'));
             })
                 .map(applicationToCompile => {
-                return application_1.default(path_1.default.resolve(applicationToCompile.path, './index.ts'), './index.js', outputPath(applicationToCompile));
+                return application_1.default(path_1.default.resolve(applicationToCompile.path, './index.ts'), 'index.js', outputPath(applicationToCompile));
             }),
-        ]);
-        compiler.run((...parameters) => {
-            console.log(parameters[1]?.toString({ colors: true }));
-            afterCompilation();
-        });
+        ];
+        if (configuration.length > 0) {
+            const compiler = webpack_1.default(configuration);
+            compiler.run((error, compilation) => {
+                console.log(compilation?.toString({ colors: true }));
+                $(applications.map(applicationToCompile => {
+                    applicationToCompile.path = outputPath(applicationToCompile);
+                    return applicationToCompile;
+                }));
+            });
+            return;
+        }
+        $(applications);
     });
 }
 exports.default = compileApplications;

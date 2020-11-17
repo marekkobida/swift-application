@@ -1,6 +1,6 @@
-declare function compileApplications(applicationsToCompile: {
+declare type ApplicationToCompile = {
     path: string;
-}[], outputPath: (applicationToCompile: {
-    path: string;
-}) => string): Promise<unknown>;
+};
+declare type ApplicationsToCompile = ApplicationToCompile[];
+declare function compileApplications(applications: ApplicationsToCompile, outputPath: (application: ApplicationToCompile) => ApplicationToCompile['path']): Promise<ApplicationsToCompile>;
 export default compileApplications;

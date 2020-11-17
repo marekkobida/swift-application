@@ -20,7 +20,7 @@ declare class NativeApplication {
     afterDelete(): void;
     private createHttpServer;
     private httpServerUrl;
-    sendIPCMessage(clientIPCMessage: ClientIPCMessage): void;
+    private static sendIPCMessage;
     toJSON(): {
         description: string;
         htmlFileUrl: string;
