@@ -24,6 +24,7 @@ function client(inputFilePath, outputFileName, outputPath) {
                 },
             ],
         },
+        name: 'client',
         output: {
             assetModuleFilename: '[name][ext]',
             filename: outputFileName,

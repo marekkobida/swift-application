@@ -20,6 +20,7 @@ function application(inputFilePath, outputFileName, outputPath) {
                 },
             ],
         },
+        name: 'application',
         output: {
             filename: outputFileName,
             libraryTarget: 'commonjs',

@@ -26,9 +26,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
 const compileApplications_1 = __importDefault(require("./webpack/compileApplications"));
-const applicationToCompile = { path: process.argv[2] };
-const applicationsToCompile = [applicationToCompile];
-const outputPath = path_1.default.resolve(os_1.default.tmpdir(), './applications', path_1.default.basename(applicationToCompile.path));
-compileApplications_1.default(applicationsToCompile, () => outputPath)
-    .then(([applicationToCompile]) => Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationToCompile.path, './index.js')))))
+const applicationPath = process.argv[2];
+const outputPath = path_1.default.resolve(os_1.default.tmpdir(), './applications', path_1.default.basename(applicationPath));
+compileApplications_1.default([applicationPath], () => outputPath)
+    .then(([applicationPath]) => Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js')))))
     .then(application => new application.default());
