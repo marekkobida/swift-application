@@ -3,7 +3,6 @@
 import os from 'os';
 import path from 'path';
 
-import Communication from './Communication';
 import Compiler from './webpack/Compiler';
 
 async function openNativeApplication(applicationPath: string) {
@@ -17,11 +16,7 @@ async function openNativeApplication(applicationPath: string) {
 
       return;
     }
-
-    Communication.sendMessage({ name: 'ERROR' });
-  } catch (error) {
-    Communication.sendMessage({ name: 'ERROR' });
-  }
+  } catch (error) {}
 }
 
 (async (applicationPath: string) => {
