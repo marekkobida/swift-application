@@ -16,7 +16,9 @@ async function openNativeApplication(applicationPath: string) {
 
       return;
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(applicationPath, error);
+  }
 }
 
 (async (applicationPath: string) => {

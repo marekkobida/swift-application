@@ -5,9 +5,9 @@
 import http from 'http';
 import net from 'net';
 
-import Communication from './Communication';
+import Application from './Application';
 
-class NativeApplication {
+class NativeApplication extends Application {
   httpServer: http.Server;
 
   httpServerSockets: Set<net.Socket> = new Set();
@@ -18,42 +18,24 @@ class NativeApplication {
     readonly name: string,
     readonly version: string
   ) {
+    super(description, htmlFileUrl, name, version);
+
     this.httpServer = this.createHttpServer();
 
-    Communication.receiveMessage(async message => {
-      if (message.name === 'AFTER_ADD') {
-        await this.afterAdd();
-      }
-
-      if (message.name === 'DELETE') {
-        Communication.sendMessage({
-          application: this.toJSON(),
-          name: 'AFTER_DELETE',
-        });
-
-        this.httpServer.close();
-
-        this.httpServerSockets.forEach(socket => {
-          socket.destroy();
-
-          this.httpServerSockets.delete(socket);
-        });
-
-        await this.afterDelete();
-
-        process.exit();
-      }
-    });
-
-    Communication.sendMessage({
-      application: this.toJSON(),
-      name: 'ADD',
-    });
+    this.add();
   }
 
   async afterAdd() {}
 
-  async afterDelete() {}
+  async afterDelete() {
+    this.httpServer.close();
+
+    this.httpServerSockets.forEach(socket => {
+      socket.destroy();
+
+      this.httpServerSockets.delete(socket);
+    });
+  }
 
   private createHttpServer() {
     const httpServer = http.createServer((request, response) => {

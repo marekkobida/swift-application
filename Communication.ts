@@ -2,10 +2,11 @@
  * Copyright 2020 Marek Kobida
  */
 
+import Application from './Application';
 import NativeApplication from './NativeApplication';
 
 export interface ClientMessage {
-  application: ReturnType<NativeApplication['toJSON']>;
+  application: ReturnType<Application['toJSON'] | NativeApplication['toJSON']>;
   name: 'ADD' | 'AFTER_DELETE';
 }
 
@@ -14,13 +15,11 @@ export interface ServerMessage {
 }
 
 class Communication {
-  static receiveMessage(
-    receiveMessage: (message: ServerMessage) => Promise<void>
-  ) {
+  receiveMessage(receiveMessage: (message: ServerMessage) => Promise<void>) {
     process.on('message', receiveMessage);
   }
 
-  static sendMessage(message: ClientMessage) {
+  sendMessage(message: ClientMessage) {
     process.send?.(message);
   }
 }
