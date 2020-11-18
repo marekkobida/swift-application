@@ -26,14 +26,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
 const Compiler_1 = __importDefault(require("./webpack/Compiler"));
+const NativeApplication_1 = __importDefault(require("./NativeApplication"));
 async function openApplication(applicationPath) {
     try {
         const application = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
         if (typeof application.default === 'function') {
             new application.default();
         }
+        NativeApplication_1.default.sendMessage({ name: 'ERROR' });
     }
-    catch (error) { }
+    catch (error) {
+        NativeApplication_1.default.sendMessage({ name: 'ERROR' });
+    }
 }
 (async (applicationPath) => {
     if (process.env.NODE_ENV === 'development') {
