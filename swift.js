@@ -24,8 +24,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
-const compileApplications_1 = __importDefault(require("./webpack/compileApplications"));
+const Compiler_1 = __importDefault(require("./webpack/Compiler"));
 (async () => {
     const { swift: { applicationsToCompile }, } = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(process.cwd(), './package.json'))));
-    await compileApplications_1.default(applicationsToCompile, path_1.default.resolve(process.cwd(), './public'));
+    await new Compiler_1.default().compileApplications(applicationsToCompile, path_1.default.resolve(process.cwd(), './public'));
 })();

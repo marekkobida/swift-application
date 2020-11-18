@@ -25,7 +25,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
-const compileApplications_1 = __importDefault(require("./webpack/compileApplications"));
+const Compiler_1 = __importDefault(require("./webpack/Compiler"));
 async function openApplication(applicationPath) {
     try {
         const application = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
@@ -41,7 +41,7 @@ async function openApplication(applicationPath) {
 }
 (async (applicationPath) => {
     if (process.env.NODE_ENV === 'development') {
-        const { children: [{ outputPath }], } = await compileApplications_1.default([applicationPath], os_1.default.tmpdir());
+        const { children: [{ outputPath }], } = await new Compiler_1.default().compileApplications([applicationPath], os_1.default.tmpdir());
         await openApplication(outputPath || applicationPath);
         return;
     }

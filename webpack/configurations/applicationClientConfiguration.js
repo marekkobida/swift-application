@@ -7,32 +7,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
-function applicationConfiguration(inputPath, outputPath) {
+function applicationClientConfiguration(inputPath, outputPath) {
     return {
-        entry: path_1.default.resolve(inputPath, './index.ts'),
+        entry: path_1.default.resolve(inputPath, './client.tsx'),
         mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
         module: {
             rules: [
+                {
+                    test: /\.(css|html)$/,
+                    type: 'asset/resource',
+                },
                 {
                     loader: 'babel-loader',
                     options: {
                         plugins: ['@babel/plugin-proposal-class-properties'],
                         presets: ['@babel/preset-react', '@babel/preset-typescript'],
                     },
-                    test: /\.(js|ts)$/,
+                    test: /\.(js|ts|tsx)$/,
                 },
             ],
         },
-        name: 'application',
         output: {
-            filename: 'index.js',
-            libraryTarget: 'commonjs',
-            path: outputPath,
+            assetModuleFilename: '[name][ext]',
+            filename: 'client.js',
+            path: path_1.default.resolve(outputPath, './applications', path_1.default.basename(inputPath)),
         },
         resolve: {
-            extensions: ['.js', '.ts'],
+            extensions: ['.js', '.ts', '.tsx'],
         },
-        target: 'node',
     };
 }
-exports.default = applicationConfiguration;
+exports.default = applicationClientConfiguration;
