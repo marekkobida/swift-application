@@ -10,13 +10,14 @@ import Communication from './Communication';
 class Application {
   communication = new Communication();
 
+  htmlFileUrl?: string;
+
   httpServer?: http.Server = this.createHttpServer();
 
   httpServerSockets: Set<net.Socket> = new Set();
 
   constructor(
     readonly description: string,
-    readonly htmlFileUrl: string,
     readonly name: string,
     readonly version: string
   ) {
@@ -80,12 +81,12 @@ class Application {
     }
   }
 
-  private httpServerUrl(): string {
+  private httpServerUrl(): string | undefined {
     const httpServerAddress = this.httpServer?.address();
 
     return httpServerAddress !== null && typeof httpServerAddress === 'object'
       ? `http://127.0.0.1:${httpServerAddress.port}`
-      : 'http://127.0.0.1';
+      : undefined;
   }
 
   toJSON() {
@@ -98,15 +99,18 @@ class Application {
     };
   }
 
-  private updateHtmlFileUrl(): string {
-    const htmlFileUrl = new URL(this.htmlFileUrl);
+  private updateHtmlFileUrl(): string | undefined {
+    if (this.htmlFileUrl) {
+      const htmlFileUrl = new URL(this.htmlFileUrl);
 
-    htmlFileUrl.searchParams.set(
-      'applicationHttpServerUrl',
-      this.httpServerUrl()
-    );
+      const httpServerUrl = this.httpServerUrl();
 
-    return htmlFileUrl.toString();
+      if (httpServerUrl) {
+        htmlFileUrl.searchParams.set('applicationHttpServerUrl', httpServerUrl);
+      }
+
+      return htmlFileUrl.toString();
+    }
   }
 }
 
