@@ -25,7 +25,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
-const Communication_1 = __importDefault(require("./Communication"));
 const Compiler_1 = __importDefault(require("./webpack/Compiler"));
 async function openNativeApplication(applicationPath) {
     try {
@@ -34,11 +33,8 @@ async function openNativeApplication(applicationPath) {
             new application.default();
             return;
         }
-        Communication_1.default.sendMessage({ name: 'ERROR' });
     }
-    catch (error) {
-        Communication_1.default.sendMessage({ name: 'ERROR' });
-    }
+    catch (error) { }
 }
 (async (applicationPath) => {
     if (process.env.NODE_ENV === 'development') {

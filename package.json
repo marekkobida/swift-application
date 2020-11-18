@@ -1,0 +1,18 @@
+{
+  "bin": {
+    "open-native-application": "openNativeApplication.js",
+    "swift": "swift.js"
+  },
+  "dependencies": {
+    "@babel/core": "*",
+    "@babel/plugin-proposal-class-properties": "*",
+    "@babel/preset-react": "*",
+    "@babel/preset-typescript": "*",
+    "@types/node": "*",
+    "babel-loader": "*",
+    "webpack": "*"
+  },
+  "name": "@swift/application",
+  "private": true,
+  "version": "1.0.0"
+}
