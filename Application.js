@@ -7,34 +7,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = __importDefault(require("http"));
-const Communication_1 = __importDefault(require("./Communication"));
+const path_1 = __importDefault(require("path"));
+const ApplicationEventEmitter_1 = __importDefault(require("./ApplicationEventEmitter"));
 class Application {
     constructor(description, name, version) {
         this.description = description;
         this.name = name;
         this.version = version;
-        this.communication = new Communication_1.default();
+        this.eventEmitter = new ApplicationEventEmitter_1.default();
         this.httpServer = this.createHttpServer();
         this.httpServerSockets = new Set();
-        this.communication.receiveMessage(async (message) => {
-            if (message.name === 'AFTER_ADD') {
-                await this.afterAdd();
-            }
-            if (message.name === 'DELETE') {
-                this.communication.sendMessage({
-                    application: this.toJSON(),
-                    name: 'AFTER_DELETE',
-                });
-                await this.afterDelete();
-            }
-        });
-        this.communication.sendMessage({
-            application: this.toJSON(),
-            name: 'ADD',
-        });
     }
-    async afterAdd() { }
-    async afterDelete() {
+    afterAdd() { }
+    afterDelete() {
         if (typeof window === 'undefined') {
             this.httpServer?.close();
             this.httpServerSockets.forEach(socket => {
@@ -67,6 +52,16 @@ class Application {
             ? `http://127.0.0.1:${httpServerAddress.port}`
             : undefined;
     }
+    open() {
+        this.eventEmitter.on('AFTER_ADD', () => {
+            this.afterAdd();
+        });
+        this.eventEmitter.on('DELETE', () => {
+            this.afterDelete();
+            this.eventEmitter.emit('AFTER_DELETE', this.toJSON());
+        });
+        this.eventEmitter.emit('ADD', this.toJSON());
+    }
     toJSON() {
         return {
             description: this.description,
@@ -77,8 +72,8 @@ class Application {
         };
     }
     updateHtmlFileUrl() {
-        if (this.htmlFileUrl) {
-            const htmlFileUrl = new URL(this.htmlFileUrl);
+        if (typeof window === 'undefined') {
+            const htmlFileUrl = new URL(path_1.default.resolve(__dirname, './client.html'), 'file://');
             const httpServerUrl = this.httpServerUrl();
             if (httpServerUrl) {
                 htmlFileUrl.searchParams.set('applicationHttpServerUrl', httpServerUrl);

@@ -28,10 +28,20 @@ const path_1 = __importDefault(require("path"));
 const Compiler_1 = __importDefault(require("./webpack/Compiler"));
 async function openApplication(applicationPath) {
     try {
-        const application = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
-        if (typeof application.default === 'function') {
-            new application.default();
-            return;
+        const $ = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
+        if (typeof $.default === 'function') {
+            const application = new $.default();
+            process.on('message', message => {
+                if (message.name === 'AFTER_ADD') {
+                    application.eventEmitter.emit('AFTER_ADD');
+                }
+                if (message.name === 'DELETE') {
+                    application.eventEmitter.emit('DELETE');
+                }
+            });
+            application.eventEmitter.on('ADD', application => process.send?.({ application, name: 'ADD' }));
+            application.eventEmitter.on('AFTER_DELETE', application => process.send?.({ application, name: 'AFTER_DELETE' }));
+            application.open();
         }
     }
     catch (error) {
