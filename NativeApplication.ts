@@ -5,14 +5,7 @@
 import http from 'http';
 import net from 'net';
 
-export interface ClientMessage {
-  application?: ReturnType<NativeApplication['toJSON']>;
-  name: 'ADD' | 'AFTER_DELETE' | 'ERROR';
-}
-
-export interface ServerMessage {
-  name: 'AFTER_ADD' | 'DELETE';
-}
+import Communication from './Communication';
 
 class NativeApplication {
   httpServer: http.Server;
@@ -27,13 +20,13 @@ class NativeApplication {
   ) {
     this.httpServer = this.createHttpServer();
 
-    NativeApplication.receiveMessage(message => {
+    Communication.receiveMessage(async message => {
       if (message.name === 'AFTER_ADD') {
-        this.afterAdd();
+        await this.afterAdd();
       }
 
       if (message.name === 'DELETE') {
-        NativeApplication.sendMessage({
+        Communication.sendMessage({
           application: this.toJSON(),
           name: 'AFTER_DELETE',
         });
@@ -46,19 +39,21 @@ class NativeApplication {
           this.httpServerSockets.delete(socket);
         });
 
-        this.afterDelete();
+        await this.afterDelete();
+
+        process.exit();
       }
     });
 
-    NativeApplication.sendMessage({
+    Communication.sendMessage({
       application: this.toJSON(),
       name: 'ADD',
     });
   }
 
-  afterAdd() {}
+  async afterAdd() {}
 
-  afterDelete() {}
+  async afterDelete() {}
 
   private createHttpServer() {
     const httpServer = http.createServer((request, response) => {
@@ -91,14 +86,6 @@ class NativeApplication {
       : 'http://127.0.0.1';
   }
 
-  static receiveMessage(receiveMessage: (message: ServerMessage) => void) {
-    process.on('message', receiveMessage);
-  }
-
-  static sendMessage(message: ClientMessage) {
-    process.send?.(message);
-  }
-
   toJSON() {
     return {
       description: this.description,
@@ -112,7 +99,10 @@ class NativeApplication {
   private updateHtmlFileUrl(): string {
     const htmlFileUrl = new URL(this.htmlFileUrl);
 
-    htmlFileUrl.searchParams.set('httpServerUrl', this.httpServerUrl());
+    htmlFileUrl.searchParams.set(
+      'applicationHttpServerUrl',
+      this.httpServerUrl()
+    );
 
     return htmlFileUrl.toString();
   }

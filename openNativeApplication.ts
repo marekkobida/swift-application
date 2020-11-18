@@ -3,10 +3,10 @@
 import os from 'os';
 import path from 'path';
 
+import Communication from './Communication';
 import Compiler from './webpack/Compiler';
-import NativeApplication from './NativeApplication';
 
-async function openApplication(applicationPath: string) {
+async function openNativeApplication(applicationPath: string) {
   try {
     const application = await import(
       path.resolve(applicationPath, './index.js')
@@ -18,9 +18,9 @@ async function openApplication(applicationPath: string) {
       return;
     }
 
-    NativeApplication.sendMessage({ name: 'ERROR' });
+    Communication.sendMessage({ name: 'ERROR' });
   } catch (error) {
-    NativeApplication.sendMessage({ name: 'ERROR' });
+    Communication.sendMessage({ name: 'ERROR' });
   }
 }
 
@@ -33,10 +33,10 @@ async function openApplication(applicationPath: string) {
       os.tmpdir()
     );
 
-    await openApplication(outputPath || applicationPath);
+    await openNativeApplication(outputPath || applicationPath);
 
     return;
   }
 
-  await openApplication(applicationPath);
+  await openNativeApplication(applicationPath);
 })(process.argv[2]);
