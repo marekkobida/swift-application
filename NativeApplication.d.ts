@@ -1,13 +1,13 @@
 /// <reference types="node" />
 import http from 'http';
 import net from 'net';
-export interface ClientIPCMessage {
+export declare type ClientMessage = {
     application: ReturnType<NativeApplication['toJSON']>;
     name: 'ADD' | 'AFTER_DELETE';
-}
-export interface ServerIPCMessage {
+};
+export declare type ServerMessage = {
     name: 'AFTER_ADD' | 'DELETE';
-}
+};
 declare class NativeApplication {
     readonly description: string;
     readonly htmlFileUrl: string;
@@ -20,7 +20,8 @@ declare class NativeApplication {
     afterDelete(): void;
     private createHttpServer;
     private httpServerUrl;
-    private static sendIPCMessage;
+    private static receiveMessage;
+    private static sendMessage;
     toJSON(): {
         description: string;
         htmlFileUrl: string;

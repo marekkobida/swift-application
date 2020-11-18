@@ -1,6 +1,6 @@
 import ConfigurationStorage from './ConfigurationStorage';
 declare class Compiler {
-    compile(configurationStorage: ConfigurationStorage, inputPaths: string[], outputPath: string): Promise<{
+    compile(inputPaths: string[], outputPath: string, configurationStorage?: ConfigurationStorage): Promise<{
         children: {
             outputPath?: string;
         }[];

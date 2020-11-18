@@ -31,19 +31,15 @@ async function openApplication(applicationPath) {
         const application = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
         if (typeof application.default === 'function') {
             new application.default();
-            return;
         }
-        console.log('the application is not valid');
     }
-    catch (error) {
-        console.log(`the application "${applicationPath}" does not exist`);
-    }
+    catch (error) { }
 }
 (async (applicationPath) => {
     if (process.env.NODE_ENV === 'development') {
         const { children: [{ outputPath }], } = await new Compiler_1.default().compileApplications([applicationPath], os_1.default.tmpdir());
-        openApplication(outputPath || applicationPath);
+        await openApplication(outputPath || applicationPath);
         return;
     }
-    openApplication(applicationPath);
+    await openApplication(applicationPath);
 })(process.argv[2]);

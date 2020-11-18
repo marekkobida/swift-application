@@ -4,15 +4,15 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 class ConfigurationStorage {
-    constructor(configurations = new Set()) {
-        this.configurations = configurations;
+    constructor(configurationStorage = new Set()) {
+        this.configurationStorage = configurationStorage;
     }
     add(configuration) {
-        this.configurations.add(configuration);
+        this.configurationStorage.add(configuration);
         return this;
     }
     resolve(inputPaths, outputPath) {
-        return [...this.configurations].flatMap(configuration => {
+        return [...this.configurationStorage].flatMap(configuration => {
             return inputPaths.flatMap(inputPath => {
                 return configuration(inputPath, outputPath);
             });

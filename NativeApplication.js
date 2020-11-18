@@ -15,12 +15,12 @@ class NativeApplication {
         this.version = version;
         this.httpServerSockets = new Set();
         this.httpServer = this.createHttpServer();
-        process.on('message', (serverIPCMessage) => {
-            if (serverIPCMessage.name === 'AFTER_ADD') {
+        NativeApplication.receiveMessage(message => {
+            if (message.name === 'AFTER_ADD') {
                 this.afterAdd();
             }
-            if (serverIPCMessage.name === 'DELETE') {
-                NativeApplication.sendIPCMessage({
+            if (message.name === 'DELETE') {
+                NativeApplication.sendMessage({
                     application: this.toJSON(),
                     name: 'AFTER_DELETE',
                 });
@@ -32,7 +32,7 @@ class NativeApplication {
                 this.afterDelete();
             }
         });
-        NativeApplication.sendIPCMessage({
+        NativeApplication.sendMessage({
             application: this.toJSON(),
             name: 'ADD',
         });
@@ -61,8 +61,11 @@ class NativeApplication {
             ? `http://127.0.0.1:${httpServerAddress.port}`
             : 'http://127.0.0.1';
     }
-    static sendIPCMessage(clientIPCMessage) {
-        process.send?.(clientIPCMessage);
+    static receiveMessage(receiveMessage) {
+        process.on('message', receiveMessage);
+    }
+    static sendMessage(message) {
+        process.send?.(message);
     }
     toJSON() {
         return {

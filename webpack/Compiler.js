@@ -11,7 +11,7 @@ const ConfigurationStorage_1 = __importDefault(require("./ConfigurationStorage")
 const applicationClientConfiguration_1 = __importDefault(require("./configurations/applicationClientConfiguration"));
 const applicationConfiguration_1 = __importDefault(require("./configurations/applicationConfiguration"));
 class Compiler {
-    compile(configurationStorage, inputPaths, outputPath) {
+    compile(inputPaths, outputPath, configurationStorage = new ConfigurationStorage_1.default()) {
         return new Promise(afterCompilation => {
             const configuration = configurationStorage.resolve(inputPaths, outputPath);
             const compiler = webpack_1.default(configuration);
@@ -23,9 +23,9 @@ class Compiler {
     }
     compileApplications(inputPaths, outputPath, configurationStorage = new ConfigurationStorage_1.default()) {
         configurationStorage
-            .add(applicationConfiguration_1.default)
-            .add(applicationClientConfiguration_1.default);
-        return this.compile(configurationStorage, inputPaths, outputPath);
+            .add(applicationClientConfiguration_1.default)
+            .add(applicationConfiguration_1.default);
+        return this.compile(inputPaths, outputPath, configurationStorage);
     }
 }
 exports.default = Compiler;
