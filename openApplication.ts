@@ -5,7 +5,7 @@ import path from 'path';
 
 import Compiler from './webpack/Compiler';
 
-async function openNativeApplication(applicationPath: string) {
+async function openApplication(applicationPath: string) {
   try {
     const application = await import(
       path.resolve(applicationPath, './index.js')
@@ -30,10 +30,10 @@ async function openNativeApplication(applicationPath: string) {
       os.tmpdir()
     );
 
-    await openNativeApplication(outputPath || applicationPath);
+    await openApplication(outputPath || applicationPath);
 
     return;
   }
 
-  await openNativeApplication(applicationPath);
+  await openApplication(applicationPath);
 })(process.argv[2]);
