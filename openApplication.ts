@@ -5,23 +5,32 @@ import path from 'path';
 
 import compileApplications from './webpack/compileApplications';
 
-const applicationPath = process.argv[2];
+async function openApplication(applicationPath: string) {
+  try {
+    const application = await import(path.resolve(applicationPath, './index.js'));
 
-const outputPath = os.tmpdir();
-
-compileApplications([applicationPath], outputPath)
-  .then(({ children: [{ outputPath }] }) => {
-    return import(path.resolve(outputPath, './index.js'));
-  })
-  .then(application => {
     if (typeof application.default === 'function') {
       new application.default();
-    } else {
-      return import(path.resolve(applicationPath, './index.js'));
+
+      return;
     }
-  })
-  .then(application => {
-    if (typeof application?.default === 'function') {
-      new application.default();
-    }
-  });
+
+    console.log('the application is not valid');
+  } catch (error) {
+    console.log(`the application "${applicationPath}" does not exist`);
+  }
+}
+
+(async (applicationPath: string) => {
+  if (process.env.NODE_ENV === 'development') {
+    const {
+      children: [{ outputPath }],
+    } = await compileApplications([applicationPath], os.tmpdir());
+
+    await openApplication(outputPath || applicationPath);
+
+    return;
+  }
+
+  await openApplication(applicationPath);
+})(process.argv[2]);

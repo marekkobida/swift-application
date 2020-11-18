@@ -13,7 +13,7 @@ const test = new Test([applicationClientConfiguration, applicationConfiguration]
 function compileApplications(
   applications: string[],
   outputPath: string
-): Promise<{ children: { outputPath: string }[] }> {
+): Promise<{ children: { name?: string; outputPath?: string }[] }> {
   return new Promise(afterCompilation => {
     const configuration = test.test(applications, outputPath);
 

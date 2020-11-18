@@ -10,9 +10,8 @@ function applicationClientConfiguration(
   outputPath: string
 ): webpack.Configuration {
   return {
-    devtool: 'inline-source-map',
     entry: path.resolve(inputPath, './client.tsx'),
-    mode: 'development' as const,
+    mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
     module: {
       rules: [
         {
