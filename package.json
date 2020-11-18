@@ -8,6 +8,7 @@
     "@babel/plugin-proposal-class-properties": "*",
     "@babel/preset-react": "*",
     "@babel/preset-typescript": "*",
+    "@types/node": "*",
     "babel-loader": "*",
     "webpack": "*"
   },
