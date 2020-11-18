@@ -10,9 +10,9 @@ import applicationConfiguration from './configurations/applicationConfiguration'
 
 class Compiler {
   compile(
-    configurationStorage: ConfigurationStorage,
     inputPaths: string[],
-    outputPath: string
+    outputPath: string,
+    configurationStorage: ConfigurationStorage = new ConfigurationStorage()
   ): Promise<{ children: { outputPath?: string }[] }> {
     return new Promise(afterCompilation => {
       const configuration = configurationStorage.resolve(
@@ -36,10 +36,10 @@ class Compiler {
     configurationStorage: ConfigurationStorage = new ConfigurationStorage()
   ) {
     configurationStorage
-      .add(applicationConfiguration)
-      .add(applicationClientConfiguration);
+      .add(applicationClientConfiguration)
+      .add(applicationConfiguration);
 
-    return this.compile(configurationStorage, inputPaths, outputPath);
+    return this.compile(inputPaths, outputPath, configurationStorage);
   }
 }
 

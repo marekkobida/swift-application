@@ -4,22 +4,22 @@
 
 import webpack from 'webpack';
 
-type T = (
+type Configuration = (
   inputPath: string,
   outputPath: string
 ) => webpack.Configuration | webpack.Configuration[];
 
 class ConfigurationStorage {
-  constructor(private configurations: Set<T> = new Set()) {}
+  constructor(private configurationStorage: Set<Configuration> = new Set()) {}
 
-  add(configuration: T): this {
-    this.configurations.add(configuration);
+  add(configuration: Configuration): this {
+    this.configurationStorage.add(configuration);
 
     return this;
   }
 
   resolve(inputPaths: string[], outputPath: string): webpack.Configuration[] {
-    return [...this.configurations].flatMap(configuration => {
+    return [...this.configurationStorage].flatMap(configuration => {
       return inputPaths.flatMap(inputPath => {
         return configuration(inputPath, outputPath);
       });

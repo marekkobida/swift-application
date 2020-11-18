@@ -7,7 +7,6 @@
     "module": "CommonJS",
     "moduleResolution": "Node",
     "outDir": "./public",
-    "resolveJsonModule": true,
     "strict": true,
     "target": "ESNext"
   }

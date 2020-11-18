@@ -13,14 +13,8 @@ async function openApplication(applicationPath: string) {
 
     if (typeof application.default === 'function') {
       new application.default();
-
-      return;
     }
-
-    console.log('the application is not valid');
-  } catch (error) {
-    console.log(`the application "${applicationPath}" does not exist`);
-  }
+  } catch (error) {}
 }
 
 (async (applicationPath: string) => {
@@ -32,10 +26,10 @@ async function openApplication(applicationPath: string) {
       os.tmpdir()
     );
 
-    openApplication(outputPath || applicationPath);
+    await openApplication(outputPath || applicationPath);
 
     return;
   }
 
-  openApplication(applicationPath);
+  await openApplication(applicationPath);
 })(process.argv[2]);

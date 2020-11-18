@@ -5,14 +5,14 @@
 import http from 'http';
 import net from 'net';
 
-export interface ClientIPCMessage {
+export type ClientMessage = {
   application: ReturnType<NativeApplication['toJSON']>;
   name: 'ADD' | 'AFTER_DELETE';
-}
+};
 
-export interface ServerIPCMessage {
+export type ServerMessage = {
   name: 'AFTER_ADD' | 'DELETE';
-}
+};
 
 class NativeApplication {
   httpServer: http.Server;
@@ -27,13 +27,13 @@ class NativeApplication {
   ) {
     this.httpServer = this.createHttpServer();
 
-    process.on('message', (serverIPCMessage: ServerIPCMessage) => {
-      if (serverIPCMessage.name === 'AFTER_ADD') {
+    NativeApplication.receiveMessage(message => {
+      if (message.name === 'AFTER_ADD') {
         this.afterAdd();
       }
 
-      if (serverIPCMessage.name === 'DELETE') {
-        NativeApplication.sendIPCMessage({
+      if (message.name === 'DELETE') {
+        NativeApplication.sendMessage({
           application: this.toJSON(),
           name: 'AFTER_DELETE',
         });
@@ -50,7 +50,7 @@ class NativeApplication {
       }
     });
 
-    NativeApplication.sendIPCMessage({
+    NativeApplication.sendMessage({
       application: this.toJSON(),
       name: 'ADD',
     });
@@ -91,8 +91,14 @@ class NativeApplication {
       : 'http://127.0.0.1';
   }
 
-  private static sendIPCMessage(clientIPCMessage: ClientIPCMessage) {
-    process.send?.(clientIPCMessage);
+  private static receiveMessage(
+    receiveMessage: (message: ServerMessage) => void
+  ) {
+    process.on('message', receiveMessage);
+  }
+
+  private static sendMessage(message: ClientMessage) {
+    process.send?.(message);
   }
 
   toJSON() {
