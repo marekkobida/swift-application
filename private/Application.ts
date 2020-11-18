@@ -4,15 +4,14 @@
 
 import http from 'http';
 import net from 'net';
+import path from 'path';
 
-import Communication from './Communication';
+import ApplicationEventEmitter from './ApplicationEventEmitter';
 
 class Application {
-  communication = new Communication();
+  eventEmitter = new ApplicationEventEmitter();
 
-  htmlFileUrl?: string;
-
-  httpServer?: http.Server = this.createHttpServer();
+  httpServer = this.createHttpServer();
 
   httpServerSockets: Set<net.Socket> = new Set();
 
@@ -20,31 +19,11 @@ class Application {
     readonly description: string,
     readonly name: string,
     readonly version: string
-  ) {
-    this.communication.receiveMessage(async message => {
-      if (message.name === 'AFTER_ADD') {
-        await this.afterAdd();
-      }
+  ) {}
 
-      if (message.name === 'DELETE') {
-        this.communication.sendMessage({
-          application: this.toJSON(),
-          name: 'AFTER_DELETE',
-        });
+  afterAdd() {}
 
-        await this.afterDelete();
-      }
-    });
-
-    this.communication.sendMessage({
-      application: this.toJSON(),
-      name: 'ADD',
-    });
-  }
-
-  async afterAdd() {}
-
-  async afterDelete() {
+  afterDelete() {
     if (typeof window === 'undefined') {
       this.httpServer?.close();
 
@@ -89,6 +68,20 @@ class Application {
       : undefined;
   }
 
+  open() {
+    this.eventEmitter.on('AFTER_ADD', () => {
+      this.afterAdd();
+    });
+
+    this.eventEmitter.on('DELETE', () => {
+      this.afterDelete();
+
+      this.eventEmitter.emit('AFTER_DELETE', this.toJSON());
+    });
+
+    this.eventEmitter.emit('ADD', this.toJSON());
+  }
+
   toJSON() {
     return {
       description: this.description,
@@ -100,8 +93,11 @@ class Application {
   }
 
   private updateHtmlFileUrl(): string | undefined {
-    if (this.htmlFileUrl) {
-      const htmlFileUrl = new URL(this.htmlFileUrl);
+    if (typeof window === 'undefined') {
+      const htmlFileUrl = new URL(
+        path.resolve(__dirname, './client.html'),
+        'file://'
+      );
 
       const httpServerUrl = this.httpServerUrl();
 

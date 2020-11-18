@@ -11,7 +11,7 @@ function applicationConfiguration(
 ): webpack.Configuration {
   return {
     entry: path.resolve(inputPath, './index.ts'),
-    externals: ['http', 'net'],
+    externals: ['http', 'net', 'path'],
     mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
     module: {
       rules: [
@@ -26,10 +26,13 @@ function applicationConfiguration(
       ],
     },
     name: 'application',
+    node: {
+      __dirname: false,
+    },
     output: {
       filename: 'index.js',
+      globalObject: 'this',
       library: {
-        export: 'default',
         name: ['applications', path.basename(inputPath)],
         type: 'umd',
       },
@@ -39,13 +42,6 @@ function applicationConfiguration(
         path.basename(inputPath)
       ),
     },
-    plugins: [
-      new webpack.DefinePlugin({
-        OUTPUT_PATH: JSON.stringify(
-          path.resolve(outputPath, './applications', path.basename(inputPath))
-        ),
-      }),
-    ],
     resolve: {
       extensions: ['.js', '.ts'],
     },
