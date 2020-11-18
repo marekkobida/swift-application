@@ -10,6 +10,7 @@ const path_1 = __importDefault(require("path"));
 function applicationConfiguration(inputPath, outputPath) {
     return {
         entry: path_1.default.resolve(inputPath, './index.ts'),
+        externals: ['http', 'net'],
         mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
         module: {
             rules: [
@@ -26,13 +27,13 @@ function applicationConfiguration(inputPath, outputPath) {
         name: 'application',
         output: {
             filename: 'index.js',
-            libraryTarget: 'commonjs',
+            globalObject: 'this',
+            libraryTarget: 'umd',
             path: path_1.default.resolve(outputPath, './applications', path_1.default.basename(inputPath)),
         },
         resolve: {
             extensions: ['.js', '.ts'],
         },
-        target: 'node',
     };
 }
 exports.default = applicationConfiguration;

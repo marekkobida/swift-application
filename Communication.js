@@ -5,10 +5,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class Communication {
     receiveMessage(receiveMessage) {
-        process.on('message', receiveMessage);
+        if (typeof window === 'undefined') {
+            process.on('message', receiveMessage);
+        }
     }
     sendMessage(message) {
-        process.send?.(message);
+        if (typeof window === 'undefined') {
+            process.send?.(message);
+        }
     }
 }
 exports.default = Communication;

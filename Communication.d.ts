@@ -1,7 +1,6 @@
 import Application from './Application';
-import NativeApplication from './NativeApplication';
 export interface ClientMessage {
-    application: ReturnType<Application['toJSON'] | NativeApplication['toJSON']>;
+    application: ReturnType<Application['toJSON']>;
     name: 'ADD' | 'AFTER_DELETE';
 }
 export interface ServerMessage {
