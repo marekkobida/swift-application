@@ -6,6 +6,5 @@ function readApplicationHttpServerUrl() {
     if (applicationHttpServerUrl) {
         return applicationHttpServerUrl;
     }
-    throw new Error('The application HTTP server URL does not exist.');
 }
 exports.default = readApplicationHttpServerUrl;

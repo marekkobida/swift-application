@@ -7,40 +7,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = __importDefault(require("http"));
-const Communication_1 = __importDefault(require("./Communication"));
-class NativeApplication {
+const Application_1 = __importDefault(require("./Application"));
+class NativeApplication extends Application_1.default {
     constructor(description, htmlFileUrl, name, version) {
+        super(description, htmlFileUrl, name, version);
         this.description = description;
         this.htmlFileUrl = htmlFileUrl;
         this.name = name;
         this.version = version;
         this.httpServerSockets = new Set();
         this.httpServer = this.createHttpServer();
-        Communication_1.default.receiveMessage(async (message) => {
-            if (message.name === 'AFTER_ADD') {
-                await this.afterAdd();
-            }
-            if (message.name === 'DELETE') {
-                Communication_1.default.sendMessage({
-                    application: this.toJSON(),
-                    name: 'AFTER_DELETE',
-                });
-                this.httpServer.close();
-                this.httpServerSockets.forEach(socket => {
-                    socket.destroy();
-                    this.httpServerSockets.delete(socket);
-                });
-                await this.afterDelete();
-                process.exit();
-            }
-        });
-        Communication_1.default.sendMessage({
-            application: this.toJSON(),
-            name: 'ADD',
-        });
+        this.add();
     }
     async afterAdd() { }
-    async afterDelete() { }
+    async afterDelete() {
+        this.httpServer.close();
+        this.httpServerSockets.forEach(socket => {
+            socket.destroy();
+            this.httpServerSockets.delete(socket);
+        });
+    }
     createHttpServer() {
         const httpServer = http_1.default.createServer((request, response) => {
             response.setHeader('Access-Control-Allow-Methods', '*');

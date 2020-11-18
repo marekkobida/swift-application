@@ -4,10 +4,10 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 class Communication {
-    static receiveMessage(receiveMessage) {
+    receiveMessage(receiveMessage) {
         process.on('message', receiveMessage);
     }
-    static sendMessage(message) {
+    sendMessage(message) {
         process.send?.(message);
     }
 }

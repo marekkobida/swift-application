@@ -34,7 +34,9 @@ async function openNativeApplication(applicationPath) {
             return;
         }
     }
-    catch (error) { }
+    catch (error) {
+        console.log(applicationPath, error);
+    }
 }
 (async (applicationPath) => {
     if (process.env.NODE_ENV === 'development') {

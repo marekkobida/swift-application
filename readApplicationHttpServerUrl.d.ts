@@ -1,2 +1,2 @@
-declare function readApplicationHttpServerUrl(): string;
+declare function readApplicationHttpServerUrl(): string | undefined;
 export default readApplicationHttpServerUrl;
