@@ -1,6 +1,6 @@
 {
   "bin": {
-    "open-native-application": "openNativeApplication.js",
+    "open-application": "openApplication.js",
     "swift": "swift.js"
   },
   "dependencies": {

@@ -26,7 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
 const Compiler_1 = __importDefault(require("./webpack/Compiler"));
-async function openNativeApplication(applicationPath) {
+async function openApplication(applicationPath) {
     try {
         const application = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
         if (typeof application.default === 'function') {
@@ -41,8 +41,8 @@ async function openNativeApplication(applicationPath) {
 (async (applicationPath) => {
     if (process.env.NODE_ENV === 'development') {
         const { children: [{ outputPath }], } = await new Compiler_1.default().compileApplications([applicationPath], os_1.default.tmpdir());
-        await openNativeApplication(outputPath || applicationPath);
+        await openApplication(outputPath || applicationPath);
         return;
     }
-    await openNativeApplication(applicationPath);
+    await openApplication(applicationPath);
 })(process.argv[2]);
