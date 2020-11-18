@@ -1,6 +1,6 @@
 import webpack from 'webpack';
 declare type L = string;
-declare type R = (inputPath: string, outputPath: string) => webpack.Configuration;
+declare type R = (inputPath: string, outputPath: string) => webpack.Configuration | webpack.Configuration[];
 declare class ConfigurationStorage {
     private configurations;
     constructor(configurations?: Map<L, R>);

@@ -19,7 +19,12 @@ class ConfigurationStorage {
         return [...this.configurations].flatMap(([name, configuration]) => {
             return inputPaths.flatMap(inputPath => {
                 const resolvedConfiguration = configuration(inputPath, outputPath);
-                resolvedConfiguration.name = name;
+                if (Array.isArray(resolvedConfiguration)) {
+                    resolvedConfiguration.forEach((resolvedConfiguration, i) => (resolvedConfiguration.name = `(${i}) ${name}`));
+                }
+                else {
+                    resolvedConfiguration.name = name;
+                }
                 return resolvedConfiguration;
             });
         });
