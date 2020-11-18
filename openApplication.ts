@@ -7,7 +7,9 @@ import Compiler from './webpack/Compiler';
 
 async function openApplication(applicationPath: string) {
   try {
-    const application = await import(path.resolve(applicationPath, './index.js'));
+    const application = await import(
+      path.resolve(applicationPath, './index.js')
+    );
 
     if (typeof application.default === 'function') {
       new application.default();
@@ -25,12 +27,15 @@ async function openApplication(applicationPath: string) {
   if (process.env.NODE_ENV === 'development') {
     const {
       children: [{ outputPath }],
-    } = await new Compiler().compileApplications([applicationPath], os.tmpdir());
+    } = await new Compiler().compileApplications(
+      [applicationPath],
+      os.tmpdir()
+    );
 
-    await openApplication(outputPath || applicationPath);
+    openApplication(outputPath || applicationPath);
 
     return;
   }
 
-  await openApplication(applicationPath);
+  openApplication(applicationPath);
 })(process.argv[2]);

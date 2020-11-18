@@ -4,39 +4,24 @@
 
 import webpack from 'webpack';
 
-type L = string;
-
-type R = (inputPath: string, outputPath: string) => webpack.Configuration | webpack.Configuration[];
+type T = (
+  inputPath: string,
+  outputPath: string
+) => webpack.Configuration | webpack.Configuration[];
 
 class ConfigurationStorage {
-  constructor(private configurations: Map<L, R> = new Map()) {}
+  constructor(private configurations: Set<T> = new Set()) {}
 
-  add(name: L, configuration: R): this {
-    this.configurations.set(name, configuration);
-
-    return this;
-  }
-
-  delete(name: L): this {
-    this.configurations.delete(name);
+  add(configuration: T): this {
+    this.configurations.add(configuration);
 
     return this;
   }
 
   resolve(inputPaths: string[], outputPath: string): webpack.Configuration[] {
-    return [...this.configurations].flatMap(([name, configuration]) => {
+    return [...this.configurations].flatMap(configuration => {
       return inputPaths.flatMap(inputPath => {
-        const resolvedConfiguration = configuration(inputPath, outputPath);
-
-        if (Array.isArray(resolvedConfiguration)) {
-          resolvedConfiguration.forEach(
-            (resolvedConfiguration, i) => (resolvedConfiguration.name = `(${i}) ${name}`)
-          );
-        } else {
-          resolvedConfiguration.name = name;
-        }
-
-        return resolvedConfiguration;
+        return configuration(inputPath, outputPath);
       });
     });
   }

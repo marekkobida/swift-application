@@ -9,7 +9,7 @@ import Compiler from './webpack/Compiler';
     swift: { applicationsToCompile },
   } = await import(path.resolve(process.cwd(), './package.json'));
 
-  await new Compiler().compileApplications(
+  new Compiler().compileApplications(
     applicationsToCompile,
     path.resolve(process.cwd(), './public')
   );

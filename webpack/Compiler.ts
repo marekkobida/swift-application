@@ -13,14 +13,17 @@ class Compiler {
     configurationStorage: ConfigurationStorage,
     inputPaths: string[],
     outputPath: string
-  ): Promise<{ children: { name?: string; outputPath?: string }[] }> {
+  ): Promise<{ children: { outputPath?: string }[] }> {
     return new Promise(afterCompilation => {
-      const configuration = configurationStorage.resolve(inputPaths, outputPath);
+      const configuration = configurationStorage.resolve(
+        inputPaths,
+        outputPath
+      );
 
       const compiler = webpack(configuration);
 
       compiler.run((error, compilation) => {
-        console.log(compilation?.toString({ colors: true }));
+        console.log(compilation?.toString({ colors: true, modules: false }));
 
         afterCompilation(compilation?.toJson());
       });
@@ -33,8 +36,8 @@ class Compiler {
     configurationStorage: ConfigurationStorage = new ConfigurationStorage()
   ) {
     configurationStorage
-      .add('application', applicationConfiguration)
-      .add('applicationClient', applicationClientConfiguration);
+      .add(applicationConfiguration)
+      .add(applicationClientConfiguration);
 
     return this.compile(configurationStorage, inputPaths, outputPath);
   }

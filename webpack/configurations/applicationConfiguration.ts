@@ -5,7 +5,10 @@
 import path from 'path';
 import webpack from 'webpack';
 
-function applicationConfiguration(inputPath: string, outputPath: string): webpack.Configuration {
+function applicationConfiguration(
+  inputPath: string,
+  outputPath: string
+): webpack.Configuration {
   return {
     entry: path.resolve(inputPath, './index.ts'),
     mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
@@ -21,10 +24,15 @@ function applicationConfiguration(inputPath: string, outputPath: string): webpac
         },
       ],
     },
+    name: 'application',
     output: {
       filename: 'index.js',
       libraryTarget: 'commonjs',
-      path: path.resolve(outputPath, './applications', path.basename(inputPath)),
+      path: path.resolve(
+        outputPath,
+        './applications',
+        path.basename(inputPath)
+      ),
     },
     resolve: {
       extensions: ['.js', '.ts'],
