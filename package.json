@@ -10,6 +10,8 @@
     "@babel/preset-typescript": "*",
     "@types/node": "*",
     "babel-loader": "*",
+    "react": "*",
+    "react-dom": "*",
     "webpack": "*"
   },
   "devDependencies": {
