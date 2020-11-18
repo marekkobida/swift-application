@@ -4,28 +4,17 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 class ConfigurationStorage {
-    constructor(configurations = new Map()) {
+    constructor(configurations = new Set()) {
         this.configurations = configurations;
     }
-    add(name, configuration) {
-        this.configurations.set(name, configuration);
-        return this;
-    }
-    delete(name) {
-        this.configurations.delete(name);
+    add(configuration) {
+        this.configurations.add(configuration);
         return this;
     }
     resolve(inputPaths, outputPath) {
-        return [...this.configurations].flatMap(([name, configuration]) => {
+        return [...this.configurations].flatMap(configuration => {
             return inputPaths.flatMap(inputPath => {
-                const resolvedConfiguration = configuration(inputPath, outputPath);
-                if (Array.isArray(resolvedConfiguration)) {
-                    resolvedConfiguration.forEach((resolvedConfiguration, i) => (resolvedConfiguration.name = `(${i}) ${name}`));
-                }
-                else {
-                    resolvedConfiguration.name = name;
-                }
-                return resolvedConfiguration;
+                return configuration(inputPath, outputPath);
             });
         });
     }

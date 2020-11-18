@@ -42,8 +42,8 @@ async function openApplication(applicationPath) {
 (async (applicationPath) => {
     if (process.env.NODE_ENV === 'development') {
         const { children: [{ outputPath }], } = await new Compiler_1.default().compileApplications([applicationPath], os_1.default.tmpdir());
-        await openApplication(outputPath || applicationPath);
+        openApplication(outputPath || applicationPath);
         return;
     }
-    await openApplication(applicationPath);
+    openApplication(applicationPath);
 })(process.argv[2]);

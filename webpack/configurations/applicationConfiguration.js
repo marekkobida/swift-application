@@ -23,6 +23,7 @@ function applicationConfiguration(inputPath, outputPath) {
                 },
             ],
         },
+        name: 'application',
         output: {
             filename: 'index.js',
             libraryTarget: 'commonjs',

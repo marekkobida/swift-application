@@ -27,6 +27,7 @@ function applicationClientConfiguration(inputPath, outputPath) {
                 },
             ],
         },
+        name: 'applicationClient',
         output: {
             assetModuleFilename: '[name][ext]',
             filename: 'client.js',
