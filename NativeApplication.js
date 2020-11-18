@@ -7,6 +7,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = __importDefault(require("http"));
+const Communication_1 = __importDefault(require("./Communication"));
 class NativeApplication {
     constructor(description, htmlFileUrl, name, version) {
         this.description = description;
@@ -15,12 +16,12 @@ class NativeApplication {
         this.version = version;
         this.httpServerSockets = new Set();
         this.httpServer = this.createHttpServer();
-        NativeApplication.receiveMessage(message => {
+        Communication_1.default.receiveMessage(async (message) => {
             if (message.name === 'AFTER_ADD') {
-                this.afterAdd();
+                await this.afterAdd();
             }
             if (message.name === 'DELETE') {
-                NativeApplication.sendMessage({
+                Communication_1.default.sendMessage({
                     application: this.toJSON(),
                     name: 'AFTER_DELETE',
                 });
@@ -29,16 +30,17 @@ class NativeApplication {
                     socket.destroy();
                     this.httpServerSockets.delete(socket);
                 });
-                this.afterDelete();
+                await this.afterDelete();
+                process.exit();
             }
         });
-        NativeApplication.sendMessage({
+        Communication_1.default.sendMessage({
             application: this.toJSON(),
             name: 'ADD',
         });
     }
-    afterAdd() { }
-    afterDelete() { }
+    async afterAdd() { }
+    async afterDelete() { }
     createHttpServer() {
         const httpServer = http_1.default.createServer((request, response) => {
             response.setHeader('Access-Control-Allow-Methods', '*');
@@ -61,12 +63,6 @@ class NativeApplication {
             ? `http://127.0.0.1:${httpServerAddress.port}`
             : 'http://127.0.0.1';
     }
-    static receiveMessage(receiveMessage) {
-        process.on('message', receiveMessage);
-    }
-    static sendMessage(message) {
-        process.send?.(message);
-    }
     toJSON() {
         return {
             description: this.description,
@@ -78,7 +74,7 @@ class NativeApplication {
     }
     updateHtmlFileUrl() {
         const htmlFileUrl = new URL(this.htmlFileUrl);
-        htmlFileUrl.searchParams.set('httpServerUrl', this.httpServerUrl());
+        htmlFileUrl.searchParams.set('applicationHttpServerUrl', this.httpServerUrl());
         return htmlFileUrl.toString();
     }
 }
