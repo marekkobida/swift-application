@@ -5,14 +5,14 @@
 import http from 'http';
 import net from 'net';
 
-export type ClientMessage = {
-  application: ReturnType<NativeApplication['toJSON']>;
-  name: 'ADD' | 'AFTER_DELETE';
-};
+export interface ClientMessage {
+  application?: ReturnType<NativeApplication['toJSON']>;
+  name: 'ADD' | 'AFTER_DELETE' | 'ERROR';
+}
 
-export type ServerMessage = {
+export interface ServerMessage {
   name: 'AFTER_ADD' | 'DELETE';
-};
+}
 
 class NativeApplication {
   httpServer: http.Server;
@@ -91,13 +91,11 @@ class NativeApplication {
       : 'http://127.0.0.1';
   }
 
-  private static receiveMessage(
-    receiveMessage: (message: ServerMessage) => void
-  ) {
+  static receiveMessage(receiveMessage: (message: ServerMessage) => void) {
     process.on('message', receiveMessage);
   }
 
-  private static sendMessage(message: ClientMessage) {
+  static sendMessage(message: ClientMessage) {
     process.send?.(message);
   }
 

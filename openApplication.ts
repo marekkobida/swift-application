@@ -4,6 +4,7 @@ import os from 'os';
 import path from 'path';
 
 import Compiler from './webpack/Compiler';
+import NativeApplication from './NativeApplication';
 
 async function openApplication(applicationPath: string) {
   try {
@@ -14,7 +15,11 @@ async function openApplication(applicationPath: string) {
     if (typeof application.default === 'function') {
       new application.default();
     }
-  } catch (error) {}
+
+    NativeApplication.sendMessage({ name: 'ERROR' });
+  } catch (error) {
+    NativeApplication.sendMessage({ name: 'ERROR' });
+  }
 }
 
 (async (applicationPath: string) => {
