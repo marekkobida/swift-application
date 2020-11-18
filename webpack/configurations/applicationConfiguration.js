@@ -7,6 +7,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
+const webpack_1 = __importDefault(require("webpack"));
 function applicationConfiguration(inputPath, outputPath) {
     return {
         entry: path_1.default.resolve(inputPath, './index.ts'),
@@ -31,6 +32,11 @@ function applicationConfiguration(inputPath, outputPath) {
             libraryTarget: 'umd',
             path: path_1.default.resolve(outputPath, './applications', path_1.default.basename(inputPath)),
         },
+        plugins: [
+            new webpack_1.default.DefinePlugin({
+                OUTPUT_PATH: JSON.stringify(path_1.default.resolve(outputPath, './applications', path_1.default.basename(inputPath))),
+            }),
+        ],
         resolve: {
             extensions: ['.js', '.ts'],
         },
