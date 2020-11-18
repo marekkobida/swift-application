@@ -14,6 +14,8 @@ async function openApplication(applicationPath: string) {
 
     if (typeof application.default === 'function') {
       new application.default();
+
+      return;
     }
 
     NativeApplication.sendMessage({ name: 'ERROR' });
