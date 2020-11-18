@@ -3,10 +3,9 @@
  */
 
 import Application from './Application';
-import NativeApplication from './NativeApplication';
 
 export interface ClientMessage {
-  application: ReturnType<Application['toJSON'] | NativeApplication['toJSON']>;
+  application: ReturnType<Application['toJSON']>;
   name: 'ADD' | 'AFTER_DELETE';
 }
 
@@ -16,11 +15,15 @@ export interface ServerMessage {
 
 class Communication {
   receiveMessage(receiveMessage: (message: ServerMessage) => Promise<void>) {
-    process.on('message', receiveMessage);
+    if (typeof window === 'undefined') {
+      process.on('message', receiveMessage);
+    }
   }
 
   sendMessage(message: ClientMessage) {
-    process.send?.(message);
+    if (typeof window === 'undefined') {
+      process.send?.(message);
+    }
   }
 }
 
