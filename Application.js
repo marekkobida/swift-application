@@ -9,9 +9,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = __importDefault(require("http"));
 const Communication_1 = __importDefault(require("./Communication"));
 class Application {
-    constructor(description, htmlFileUrl, name, version) {
+    constructor(description, name, version) {
         this.description = description;
-        this.htmlFileUrl = htmlFileUrl;
         this.name = name;
         this.version = version;
         this.communication = new Communication_1.default();
@@ -66,7 +65,7 @@ class Application {
         const httpServerAddress = this.httpServer?.address();
         return httpServerAddress !== null && typeof httpServerAddress === 'object'
             ? `http://127.0.0.1:${httpServerAddress.port}`
-            : 'http://127.0.0.1';
+            : undefined;
     }
     toJSON() {
         return {
@@ -78,9 +77,14 @@ class Application {
         };
     }
     updateHtmlFileUrl() {
-        const htmlFileUrl = new URL(this.htmlFileUrl);
-        htmlFileUrl.searchParams.set('applicationHttpServerUrl', this.httpServerUrl());
-        return htmlFileUrl.toString();
+        if (this.htmlFileUrl) {
+            const htmlFileUrl = new URL(this.htmlFileUrl);
+            const httpServerUrl = this.httpServerUrl();
+            if (httpServerUrl) {
+                htmlFileUrl.searchParams.set('applicationHttpServerUrl', httpServerUrl);
+            }
+            return htmlFileUrl.toString();
+        }
     }
 }
 exports.default = Application;
