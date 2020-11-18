@@ -26,22 +26,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
 const compileApplications_1 = __importDefault(require("./webpack/compileApplications"));
-const applicationPath = process.argv[2];
-const outputPath = os_1.default.tmpdir();
-compileApplications_1.default([applicationPath], outputPath)
-    .then(({ children: [{ outputPath }] }) => {
-    return Promise.resolve().then(() => __importStar(require(path_1.default.resolve(outputPath, './index.js'))));
-})
-    .then(application => {
-    if (typeof application.default === 'function') {
-        new application.default();
+async function openApplication(applicationPath) {
+    try {
+        const application = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
+        if (typeof application.default === 'function') {
+            new application.default();
+            return;
+        }
+        console.log('the application is not valid');
     }
-    else {
-        return Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
+    catch (error) {
+        console.log(`the application "${applicationPath}" does not exist`);
     }
-})
-    .then(application => {
-    if (typeof application?.default === 'function') {
-        new application.default();
+}
+(async (applicationPath) => {
+    if (process.env.NODE_ENV === 'development') {
+        const { children: [{ outputPath }], } = await compileApplications_1.default([applicationPath], os_1.default.tmpdir());
+        await openApplication(outputPath || applicationPath);
+        return;
     }
-});
+    await openApplication(applicationPath);
+})(process.argv[2]);

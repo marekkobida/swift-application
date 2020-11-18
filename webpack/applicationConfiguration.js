@@ -9,9 +9,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 function applicationConfiguration(inputPath, outputPath) {
     return {
-        devtool: 'inline-source-map',
         entry: path_1.default.resolve(inputPath, './index.ts'),
-        mode: 'development',
+        mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
         module: {
             rules: [
                 {

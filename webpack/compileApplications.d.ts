@@ -1,6 +1,7 @@
 declare function compileApplications(applications: string[], outputPath: string): Promise<{
     children: {
-        outputPath: string;
+        name?: string;
+        outputPath?: string;
     }[];
 }>;
 export default compileApplications;
