@@ -6,7 +6,7 @@ import webpack from 'webpack';
 
 type L = string;
 
-type R = (inputPath: string, outputPath: string) => webpack.Configuration;
+type R = (inputPath: string, outputPath: string) => webpack.Configuration | webpack.Configuration[];
 
 class ConfigurationStorage {
   constructor(private configurations: Map<L, R> = new Map()) {}
@@ -28,7 +28,13 @@ class ConfigurationStorage {
       return inputPaths.flatMap(inputPath => {
         const resolvedConfiguration = configuration(inputPath, outputPath);
 
-        resolvedConfiguration.name = name;
+        if (Array.isArray(resolvedConfiguration)) {
+          resolvedConfiguration.forEach(
+            (resolvedConfiguration, i) => (resolvedConfiguration.name = `(${i}) ${name}`)
+          );
+        } else {
+          resolvedConfiguration.name = name;
+        }
 
         return resolvedConfiguration;
       });
