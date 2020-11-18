@@ -32,6 +32,7 @@ async function openApplication(applicationPath) {
         const application = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
         if (typeof application.default === 'function') {
             new application.default();
+            return;
         }
         NativeApplication_1.default.sendMessage({ name: 'ERROR' });
     }
