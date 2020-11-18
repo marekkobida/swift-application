@@ -36,6 +36,13 @@ function applicationConfiguration(
         path.basename(inputPath)
       ),
     },
+    plugins: [
+      new webpack.DefinePlugin({
+        OUTPUT_PATH: JSON.stringify(
+          path.resolve(outputPath, './applications', path.basename(inputPath))
+        ),
+      }),
+    ],
     resolve: {
       extensions: ['.js', '.ts'],
     },
