@@ -28,11 +28,10 @@ function applicationClientConfiguration(
         },
       ],
     },
-    name: 'client',
     output: {
       assetModuleFilename: '[name][ext]',
       filename: 'client.js',
-      path: outputPath,
+      path: path.resolve(outputPath, './applications', path.basename(inputPath)),
     },
     resolve: {
       extensions: ['.js', '.ts', '.tsx'],

@@ -21,11 +21,10 @@ function applicationConfiguration(inputPath: string, outputPath: string): webpac
         },
       ],
     },
-    name: 'application',
     output: {
       filename: 'index.js',
       libraryTarget: 'commonjs',
-      path: outputPath,
+      path: path.resolve(outputPath, './applications', path.basename(inputPath)),
     },
     resolve: {
       extensions: ['.js', '.ts'],

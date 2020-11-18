@@ -3,7 +3,7 @@
 import os from 'os';
 import path from 'path';
 
-import compileApplications from './webpack/compileApplications';
+import Compiler from './webpack/Compiler';
 
 async function openApplication(applicationPath: string) {
   try {
@@ -25,7 +25,7 @@ async function openApplication(applicationPath: string) {
   if (process.env.NODE_ENV === 'development') {
     const {
       children: [{ outputPath }],
-    } = await compileApplications([applicationPath], os.tmpdir());
+    } = await new Compiler().compileApplications([applicationPath], os.tmpdir());
 
     await openApplication(outputPath || applicationPath);
 
