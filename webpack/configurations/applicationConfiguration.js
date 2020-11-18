@@ -28,8 +28,11 @@ function applicationConfiguration(inputPath, outputPath) {
         name: 'application',
         output: {
             filename: 'index.js',
-            globalObject: 'this',
-            libraryTarget: 'umd',
+            library: {
+                export: 'default',
+                name: ['applications', path_1.default.basename(inputPath)],
+                type: 'umd',
+            },
             path: path_1.default.resolve(outputPath, './applications', path_1.default.basename(inputPath)),
         },
         plugins: [
