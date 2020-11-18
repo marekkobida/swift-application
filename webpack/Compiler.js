@@ -16,7 +16,7 @@ class Compiler {
             const configuration = configurationStorage.resolve(inputPaths, outputPath);
             const compiler = webpack_1.default(configuration);
             compiler.run((error, compilation) => {
-                console.log(compilation?.toString({ modules: false }));
+                console.log(compilation?.toString({ colors: true, modules: false }));
                 afterCompilation(compilation?.toJson());
             });
         });
