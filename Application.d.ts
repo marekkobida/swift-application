@@ -1,5 +1,3 @@
-/// <reference types="node" />
-import net from 'net';
 import ApplicationEventEmitter from './ApplicationEventEmitter';
 import ApplicationHttpServer from './ApplicationHttpServer';
 declare class Application {
@@ -8,7 +6,6 @@ declare class Application {
     readonly version: string;
     eventEmitter: ApplicationEventEmitter;
     httpServer: ApplicationHttpServer;
-    httpServerSockets: Set<net.Socket>;
     constructor(description: string, name: string, version: string);
     afterAdd(): void;
     afterDelete(): void;
@@ -19,6 +16,12 @@ declare class Application {
         httpServerUrl: string;
         name: string;
         version: string;
+    } | {
+        description: string;
+        name: string;
+        version: string;
+        htmlFileUrl?: undefined;
+        httpServerUrl?: undefined;
     };
     private updateHtmlFileUrl;
 }
