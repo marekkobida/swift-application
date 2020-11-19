@@ -34,7 +34,7 @@ class ApplicationHttpServer {
     ) => void
   ) {
     if (this.httpServer) {
-      this.httpServer.on('request', onRequest);
+      this.httpServer.on(event, onRequest);
     }
   }
 
@@ -54,7 +54,7 @@ class ApplicationHttpServer {
     return httpServer;
   }
 
-  url(): string {
+  url(): string | undefined {
     if (this.httpServer) {
       const httpServerAddress = this.httpServer.address();
 
@@ -62,8 +62,6 @@ class ApplicationHttpServer {
         return `http://127.0.0.1:${httpServerAddress.port}`;
       }
     }
-
-    throw new Error('The server is not open.');
   }
 }
 

@@ -7,9 +7,19 @@ import path from 'path';
 import ApplicationEventEmitter from './ApplicationEventEmitter';
 import ApplicationHttpServer from './ApplicationHttpServer';
 
-class Application {
-  eventEmitter = new ApplicationEventEmitter();
+const currentPath: string = (() => {
+  if (typeof window === 'undefined') {
+    return new URL(path.join(__dirname), 'file://').toString();
+  }
 
+  const scripts = document.getElementsByTagName('script');
+
+  const src = scripts[scripts.length - 1].src;
+
+  return src.substring(0, src.lastIndexOf('/'));
+})();
+
+class Application {
   httpServer = new ApplicationHttpServer();
 
   constructor(
@@ -35,55 +45,32 @@ class Application {
 
   afterAdd() {}
 
-  afterDelete() {
-    if (typeof window === 'undefined') {
-      this.httpServer.closeHttpServer();
-    }
-  }
+  afterDelete() {}
 
-  open() {
-    this.eventEmitter.on('AFTER_ADD', () => this.afterAdd());
+  open(eventEmitter: ApplicationEventEmitter) {
+    eventEmitter.on('AFTER_ADD', () => this.afterAdd());
 
-    this.eventEmitter.on('DELETE', () => {
+    eventEmitter.on('DELETE', () => {
+      if (typeof window === 'undefined') {
+        this.httpServer.closeHttpServer();
+      }
+
       this.afterDelete();
 
-      this.eventEmitter.emit('AFTER_DELETE', this.toJSON());
+      eventEmitter.emit('AFTER_DELETE', this.toJSON());
     });
 
-    this.eventEmitter.emit('ADD', this.toJSON());
+    eventEmitter.emit('ADD', this.toJSON());
   }
 
   toJSON() {
-    if (typeof window === 'undefined') {
-      return {
-        description: this.description,
-        htmlFileUrl: this.updateHtmlFileUrl(),
-        httpServerUrl: this.httpServer.url(),
-        name: this.name,
-        version: this.version,
-      };
-    }
-
     return {
       description: this.description,
+      httpServerUrl: this.httpServer.url(),
       name: this.name,
+      path: currentPath,
       version: this.version,
     };
-  }
-
-  private updateHtmlFileUrl(): string | undefined {
-    if (typeof window === 'undefined') {
-      const htmlFileUrl = new URL(
-        path.resolve(__dirname, './client.html'),
-        'file://'
-      );
-
-      const httpServerUrl = this.httpServer.url();
-
-      htmlFileUrl.searchParams.set('applicationHttpServerUrl', httpServerUrl);
-
-      return htmlFileUrl.toString();
-    }
   }
 }
 
