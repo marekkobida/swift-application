@@ -2,7 +2,6 @@
  * Copyright 2020 Marek Kobida
  */
 
-import net from 'net';
 import path from 'path';
 
 import ApplicationEventEmitter from './ApplicationEventEmitter';
@@ -13,8 +12,6 @@ class Application {
 
   httpServer = new ApplicationHttpServer();
 
-  httpServerSockets: Set<net.Socket> = new Set();
-
   constructor(
     readonly description: string,
     readonly name: string,
@@ -22,6 +19,17 @@ class Application {
   ) {
     if (typeof window === 'undefined') {
       this.httpServer.openHttpServer();
+
+      this.httpServer.on('request', (request, response) => {
+        response.setHeader('Access-Control-Allow-Methods', '*');
+        response.setHeader('Access-Control-Allow-Origin', '*');
+
+        if (request.url === '/about') {
+          response.setHeader('Content-Type', 'application/json');
+
+          response.end(JSON.stringify(this.toJSON()));
+        }
+      });
     }
   }
 
@@ -46,10 +54,18 @@ class Application {
   }
 
   toJSON() {
+    if (typeof window === 'undefined') {
+      return {
+        description: this.description,
+        htmlFileUrl: this.updateHtmlFileUrl(),
+        httpServerUrl: this.httpServer.url(),
+        name: this.name,
+        version: this.version,
+      };
+    }
+
     return {
       description: this.description,
-      htmlFileUrl: this.updateHtmlFileUrl(),
-      httpServerUrl: this.httpServer.url(),
       name: this.name,
       version: this.version,
     };

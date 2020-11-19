@@ -26,11 +26,20 @@ class ApplicationHttpServer {
     throw new Error('The server is not open.');
   }
 
+  on(
+    event: 'request',
+    onRequest: (
+      request: http.IncomingMessage,
+      response: http.ServerResponse
+    ) => void
+  ) {
+    if (this.httpServer) {
+      this.httpServer.on('request', onRequest);
+    }
+  }
+
   openHttpServer(): http.Server {
-    const httpServer = http.createServer((request, response) => {
-      response.setHeader('Access-Control-Allow-Methods', '*');
-      response.setHeader('Access-Control-Allow-Origin', '*');
-    });
+    const httpServer = http.createServer();
 
     httpServer.on('connection', socket => {
       this.httpServerSockets.add(socket);

@@ -9,6 +9,8 @@
     "@babel/preset-react": "*",
     "@babel/preset-typescript": "*",
     "@types/node": "*",
+    "@types/react": "*",
+    "@types/react-dom": "*",
     "babel-loader": "*",
     "react": "*",
     "react-dom": "*",
