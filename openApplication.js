@@ -25,23 +25,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
+const ApplicationEventEmitter_1 = __importDefault(require("./ApplicationEventEmitter"));
 const Compiler_1 = __importDefault(require("./webpack/Compiler"));
+const applicationEventEmitter = new ApplicationEventEmitter_1.default();
+process.on('message', message => {
+    if (message.name === 'AFTER_ADD') {
+        applicationEventEmitter.emit('AFTER_ADD');
+    }
+    if (message.name === 'DELETE') {
+        applicationEventEmitter.emit('DELETE');
+    }
+});
+applicationEventEmitter.on('ADD', application => process.send?.({ application, name: 'ADD' }));
+applicationEventEmitter.on('AFTER_DELETE', application => process.send?.({ application, name: 'AFTER_DELETE' }));
 async function openApplication(applicationPath) {
     try {
-        const $ = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
-        if (typeof $.default === 'function') {
-            const application = new $.default();
-            process.on('message', message => {
-                if (message.name === 'AFTER_ADD') {
-                    application.eventEmitter.emit('AFTER_ADD');
-                }
-                if (message.name === 'DELETE') {
-                    application.eventEmitter.emit('DELETE');
-                }
-            });
-            application.eventEmitter.on('ADD', application => process.send?.({ application, name: 'ADD' }));
-            application.eventEmitter.on('AFTER_DELETE', application => process.send?.({ application, name: 'AFTER_DELETE' }));
-            application.open();
+        const test = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
+        if (typeof test.default === 'function') {
+            const application = new test.default();
+            application.open(applicationEventEmitter);
         }
     }
     catch (error) {

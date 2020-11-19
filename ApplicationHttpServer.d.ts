@@ -6,6 +6,6 @@ declare class ApplicationHttpServer {
     closeHttpServer(): http.Server;
     on(event: 'request', onRequest: (request: http.IncomingMessage, response: http.ServerResponse) => void): void;
     openHttpServer(): http.Server;
-    url(): string;
+    url(): string | undefined;
 }
 export default ApplicationHttpServer;

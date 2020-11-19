@@ -24,7 +24,7 @@ class ApplicationHttpServer {
     }
     on(event, onRequest) {
         if (this.httpServer) {
-            this.httpServer.on('request', onRequest);
+            this.httpServer.on(event, onRequest);
         }
     }
     openHttpServer() {
@@ -44,7 +44,6 @@ class ApplicationHttpServer {
                 return `http://127.0.0.1:${httpServerAddress.port}`;
             }
         }
-        throw new Error('The server is not open.');
     }
 }
 exports.default = ApplicationHttpServer;
