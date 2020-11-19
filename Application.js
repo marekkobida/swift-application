@@ -22,6 +22,10 @@ class Application {
         this.name = name;
         this.version = version;
         this.httpServer = new ApplicationHttpServer_1.default();
+    }
+    afterAdd() { }
+    afterDelete() { }
+    open(eventEmitter) {
         if (typeof window === 'undefined') {
             this.httpServer.openHttpServer();
             this.httpServer.on('request', (request, response) => {
@@ -33,10 +37,6 @@ class Application {
                 }
             });
         }
-    }
-    afterAdd() { }
-    afterDelete() { }
-    open(eventEmitter) {
         eventEmitter.on('AFTER_ADD', () => this.afterAdd());
         eventEmitter.on('DELETE', () => {
             if (typeof window === 'undefined') {
