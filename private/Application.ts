@@ -2,65 +2,65 @@
  * Copyright 2020 Marek Kobida
  */
 
-import path from 'path';
+import path from 'path'
 
-import ApplicationEventEmitter from './ApplicationEventEmitter';
-import ApplicationHttpServer from './ApplicationHttpServer';
+import ApplicationEventEmitter from './ApplicationEventEmitter'
+import ApplicationHttpServer from './ApplicationHttpServer'
 
 const currentPath: string = (() => {
   if (typeof window === 'undefined') {
-    return new URL(path.join(__dirname), 'file://').toString();
+    return new URL(path.join(__dirname), 'file://').toString()
   }
 
-  const scripts = document.getElementsByTagName('script');
+  const scripts = document.getElementsByTagName('script')
 
-  const src = scripts[scripts.length - 1].src;
+  const src = scripts[scripts.length - 1].src
 
-  return src.substring(0, src.lastIndexOf('/'));
-})();
+  return src.substring(0, src.lastIndexOf('/'))
+})()
 
 class Application {
-  httpServer = new ApplicationHttpServer();
+  httpServer = new ApplicationHttpServer()
 
   constructor(
     readonly description: string,
     readonly name: string,
     readonly version: string
-  ) {
-    if (typeof window === 'undefined') {
-      this.httpServer.openHttpServer();
-
-      this.httpServer.on('request', (request, response) => {
-        response.setHeader('Access-Control-Allow-Methods', '*');
-        response.setHeader('Access-Control-Allow-Origin', '*');
-
-        if (request.url === '/about') {
-          response.setHeader('Content-Type', 'application/json');
-
-          response.end(JSON.stringify(this.toJSON()));
-        }
-      });
-    }
-  }
+  ) {}
 
   afterAdd() {}
 
   afterDelete() {}
 
   open(eventEmitter: ApplicationEventEmitter) {
-    eventEmitter.on('AFTER_ADD', () => this.afterAdd());
+    if (typeof window === 'undefined') {
+      this.httpServer.openHttpServer()
 
-    eventEmitter.on('DELETE', () => {
+      this.httpServer.on('request', (request, response) => {
+        response.setHeader('Access-Control-Allow-Methods', '*')
+        response.setHeader('Access-Control-Allow-Origin', '*')
+
+        if (request.url === '/about') {
+          response.setHeader('Content-Type', 'application/json')
+
+          response.end(JSON.stringify(this.toJSON()))
+        }
+      })
+    }
+
+    eventEmitter.on('AFTER_ADD_APPLICATION', () => this.afterAdd())
+
+    eventEmitter.on('DELETE_APPLICATION', () => {
       if (typeof window === 'undefined') {
-        this.httpServer.closeHttpServer();
+        this.httpServer.closeHttpServer()
       }
 
-      this.afterDelete();
+      this.afterDelete()
 
-      eventEmitter.emit('AFTER_DELETE', this.toJSON());
-    });
+      eventEmitter.emit('AFTER_DELETE_APPLICATION', this.toJSON())
+    })
 
-    eventEmitter.emit('ADD', this.toJSON());
+    eventEmitter.emit('ADD_APPLICATION', this.toJSON())
   }
 
   toJSON() {
@@ -70,8 +70,8 @@ class Application {
       name: this.name,
       path: currentPath,
       version: this.version,
-    };
+    }
   }
 }
 
-export default Application;
+export default Application

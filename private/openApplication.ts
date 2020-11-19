@@ -3,7 +3,6 @@
 import os from 'os';
 import path from 'path';
 
-import Application from './Application';
 import ApplicationEventEmitter from './ApplicationEventEmitter';
 import Compiler from './webpack/Compiler';
 
@@ -11,30 +10,30 @@ const applicationEventEmitter = new ApplicationEventEmitter();
 
 process.on('message', message => {
   if (message.name === 'AFTER_ADD') {
-    applicationEventEmitter.emit('AFTER_ADD');
+    applicationEventEmitter.emit('AFTER_ADD_APPLICATION');
   }
 
   if (message.name === 'DELETE') {
-    applicationEventEmitter.emit('DELETE');
+    applicationEventEmitter.emit('DELETE_APPLICATION');
   }
 });
 
-applicationEventEmitter.on('ADD', application =>
+applicationEventEmitter.on('ADD_APPLICATION', application =>
   process.send?.({ application, name: 'ADD' })
 );
 
-applicationEventEmitter.on('AFTER_DELETE', application =>
+applicationEventEmitter.on('AFTER_DELETE_APPLICATION', application =>
   process.send?.({ application, name: 'AFTER_DELETE' })
 );
 
 async function openApplication(applicationPath: string) {
   try {
-    const test = await import(path.resolve(applicationPath, './index.js'));
+    const Application = await import(
+      path.resolve(applicationPath, './index.js')
+    );
 
-    if (typeof test.default === 'function') {
-      const application: Application = new test.default();
-
-      application.open(applicationEventEmitter);
+    if (typeof Application.default === 'function') {
+      new Application.default().open(applicationEventEmitter);
     }
   } catch (error) {
     console.log(applicationPath, error);
