@@ -37,15 +37,15 @@ class Application {
                 }
             });
         }
-        eventEmitter.on('AFTER_ADD', () => this.afterAdd());
-        eventEmitter.on('DELETE', () => {
+        eventEmitter.on('AFTER_ADD_APPLICATION', () => this.afterAdd());
+        eventEmitter.on('DELETE_APPLICATION', () => {
             if (typeof window === 'undefined') {
                 this.httpServer.closeHttpServer();
             }
             this.afterDelete();
-            eventEmitter.emit('AFTER_DELETE', this.toJSON());
+            eventEmitter.emit('AFTER_DELETE_APPLICATION', this.toJSON());
         });
-        eventEmitter.emit('ADD', this.toJSON());
+        eventEmitter.emit('ADD_APPLICATION', this.toJSON());
     }
     toJSON() {
         return {

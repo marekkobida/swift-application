@@ -30,20 +30,19 @@ const Compiler_1 = __importDefault(require("./webpack/Compiler"));
 const applicationEventEmitter = new ApplicationEventEmitter_1.default();
 process.on('message', message => {
     if (message.name === 'AFTER_ADD') {
-        applicationEventEmitter.emit('AFTER_ADD');
+        applicationEventEmitter.emit('AFTER_ADD_APPLICATION');
     }
     if (message.name === 'DELETE') {
-        applicationEventEmitter.emit('DELETE');
+        applicationEventEmitter.emit('DELETE_APPLICATION');
     }
 });
-applicationEventEmitter.on('ADD', application => process.send?.({ application, name: 'ADD' }));
-applicationEventEmitter.on('AFTER_DELETE', application => process.send?.({ application, name: 'AFTER_DELETE' }));
+applicationEventEmitter.on('ADD_APPLICATION', application => process.send?.({ application, name: 'ADD' }));
+applicationEventEmitter.on('AFTER_DELETE_APPLICATION', application => process.send?.({ application, name: 'AFTER_DELETE' }));
 async function openApplication(applicationPath) {
     try {
-        const test = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
-        if (typeof test.default === 'function') {
-            const application = new test.default();
-            application.open(applicationEventEmitter);
+        const Application = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
+        if (typeof Application.default === 'function') {
+            new Application.default().open(applicationEventEmitter);
         }
     }
     catch (error) {
