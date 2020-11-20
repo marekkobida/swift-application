@@ -18,29 +18,43 @@ class ApplicationStorage {
         const test = child_process_1.default.fork('./node_modules/.bin/open-application', [
             path,
         ]);
-        process.on('message', message => {
-            if (message.name === 'ADD_APPLICATION') {
-                this.applicationStorage.set(path, {
-                    application: message.application,
-                    test,
-                });
-                test.send({ name: 'AFTER_ADD_APPLICATION' });
+        test.on('message', message => {
+            if (message[0] === 'AFTER_ADD_APPLICATION') {
+                this.applicationStorage.set(path, { application: message[1], test });
             }
-            if (message.name === 'AFTER_DELETE_APPLICATION') {
+            if (message[0] === 'AFTER_CLOSE_APPLICATION') {
+            }
+            if (message[0] === 'AFTER_DELETE_APPLICATION') {
                 this.applicationStorage.delete(path);
             }
+            if (message[0] === 'AFTER_OPEN_APPLICATION') {
+            }
         });
+        return this.toJson();
+    }
+    closeApplication(path) {
+        const application = this.applicationStorage.get(path);
+        if (application) {
+            application.test.send(['CLOSE_APPLICATION']);
+        }
         return this.toJson();
     }
     deleteApplication(path) {
         const application = this.applicationStorage.get(path);
         if (application) {
-            application.test.send({ name: 'DELETE_APPLICATION' });
+            application.test.send(['DELETE_APPLICATION']);
         }
         return this.toJson();
     }
     deleteApplications() {
-        this.applicationStorage.forEach(application => application.test.send({ name: 'DELETE_APPLICATION' }));
+        this.applicationStorage.forEach(application => application.test.send(['DELETE_APPLICATION']));
+        return this.toJson();
+    }
+    openApplication(path) {
+        const application = this.applicationStorage.get(path);
+        if (application) {
+            application.test.send(['OPEN_APPLICATION']);
+        }
         return this.toJson();
     }
     readApplications() {

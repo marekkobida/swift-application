@@ -20,7 +20,6 @@ class ApplicationHttpServer {
             });
             return this.httpServer;
         }
-        throw new Error('The server is not open.');
     }
     on(event, onRequest) {
         if (this.httpServer) {

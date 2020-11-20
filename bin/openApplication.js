@@ -31,17 +31,28 @@ async function openApplication(applicationPath) {
         const application = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
         if (typeof application.default === 'function') {
             const test = new application.default();
-            process.on('message', message => {
-                if (message.name === 'AFTER_ADD_APPLICATION') {
-                    test.eventEmitter.emit('AFTER_ADD_APPLICATION');
+            process.on('message', ([event]) => {
+                if (event === 'ADD_APPLICATION') {
+                    test.add();
                 }
-                if (message.name === 'DELETE_APPLICATION') {
-                    test.eventEmitter.emit('DELETE_APPLICATION');
+                if (event === 'CLOSE_APPLICATION') {
+                    test.close();
+                }
+                if (event === 'DELETE_APPLICATION') {
+                    test.delete();
+                }
+                if (event === 'OPEN_APPLICATION') {
+                    test.open();
                 }
             });
-            test.eventEmitter.on('ADD_APPLICATION', application => process.send?.({ application, name: 'ADD_APPLICATION' }));
-            test.eventEmitter.on('AFTER_DELETE_APPLICATION', application => process.send?.({ application, name: 'AFTER_DELETE_APPLICATION' }));
-            test.open();
+            const events = [
+                'AFTER_ADD_APPLICATION',
+                'AFTER_CLOSE_APPLICATION',
+                'AFTER_DELETE_APPLICATION',
+                'AFTER_OPEN_APPLICATION',
+            ];
+            events.forEach(event => test.eventEmitter.on(event, (...parameters) => process.send?.([event, ...parameters])));
+            test.add();
         }
     }
     catch (error) {
