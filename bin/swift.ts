@@ -2,7 +2,7 @@
 
 import path from 'path';
 
-import Compiler from './webpack/Compiler';
+import Compiler from '../private/webpack/Compiler';
 
 (async () => {
   const {

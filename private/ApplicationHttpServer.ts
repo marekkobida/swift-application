@@ -8,16 +8,16 @@ import net from 'net';
 class ApplicationHttpServer {
   private httpServer?: http.Server;
 
-  private httpServerSockets: Set<net.Socket> = new Set();
+  private readonly sockets: Set<net.Socket> = new Set();
 
   closeHttpServer(): http.Server {
     if (this.httpServer) {
       this.httpServer.close();
 
-      this.httpServerSockets.forEach(socket => {
+      this.sockets.forEach(socket => {
         socket.destroy();
 
-        this.httpServerSockets.delete(socket);
+        this.sockets.delete(socket);
       });
 
       return this.httpServer;
@@ -42,9 +42,9 @@ class ApplicationHttpServer {
     const httpServer = http.createServer();
 
     httpServer.on('connection', socket => {
-      this.httpServerSockets.add(socket);
+      this.sockets.add(socket);
 
-      httpServer.once('close', () => this.httpServerSockets.delete(socket));
+      httpServer.once('close', () => this.sockets.delete(socket));
     });
 
     httpServer.listen();

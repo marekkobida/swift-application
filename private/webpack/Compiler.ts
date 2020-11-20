@@ -2,11 +2,11 @@
  * Copyright 2020 Marek Kobida
  */
 
-import webpack from 'webpack'
+import webpack from 'webpack';
 
-import ConfigurationStorage from './ConfigurationStorage'
-import applicationClientConfiguration from './configurations/applicationClientConfiguration'
-import applicationConfiguration from './configurations/applicationConfiguration'
+import ConfigurationStorage from './ConfigurationStorage';
+import applicationClientConfiguration from './configurations/applicationClientConfiguration';
+import applicationConfiguration from './configurations/applicationConfiguration';
 
 class Compiler {
   compile(
@@ -15,16 +15,19 @@ class Compiler {
     configurationStorage: ConfigurationStorage = new ConfigurationStorage()
   ): Promise<{ children: { outputPath?: string }[] }> {
     return new Promise(afterCompilation => {
-      const configuration = configurationStorage.resolve(inputPaths, outputPath)
+      const configuration = configurationStorage.resolve(
+        inputPaths,
+        outputPath
+      );
 
-      const compiler = webpack(configuration)
+      const compiler = webpack(configuration);
 
       compiler.run((error, compilation) => {
-        console.log(compilation?.toString({ colors: true }))
+        console.log(compilation?.toString({ colors: true }));
 
-        afterCompilation(compilation?.toJson())
-      })
-    })
+        afterCompilation(compilation?.toJson());
+      });
+    });
   }
 
   compileApplications(
@@ -34,10 +37,10 @@ class Compiler {
   ) {
     configurationStorage
       .add(applicationClientConfiguration)
-      .add(applicationConfiguration)
+      .add(applicationConfiguration);
 
-    return this.compile(inputPaths, outputPath, configurationStorage)
+    return this.compile(inputPaths, outputPath, configurationStorage);
   }
 }
 
-export default Compiler
+export default Compiler;
