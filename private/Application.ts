@@ -26,25 +26,42 @@ class Application {
 
   readonly httpServer = new ApplicationHttpServer();
 
+  isTest = false;
+
   constructor(
     readonly description: string,
     readonly name: string,
     readonly version: string
   ) {
-    console.log('Application', description, name, version);
+    setInterval(() => {
+      if (this.isTest) {
+        console.log('vypol si ma vynútene');
+        process.exit();
+      }
+    }, 1000);
   }
 
-  afterAdd() {
-    console.log('Application.afterAdd');
+  add() {
+    this.eventEmitter.emit('AFTER_ADD_APPLICATION', this.toJson());
   }
 
-  afterDelete() {
-    console.log('Application.afterDelete');
+  close() {
+    if (typeof window === 'undefined') {
+      this.httpServer.closeHttpServer();
+    }
+
+    this.eventEmitter.emit('AFTER_CLOSE_APPLICATION', this.toJson());
+  }
+
+  delete() {
+    this.close();
+
+    this.eventEmitter.emit('AFTER_DELETE_APPLICATION', this.toJson());
+
+    this.isTest = true;
   }
 
   open() {
-    console.log('Application.open');
-
     if (typeof window === 'undefined') {
       this.httpServer.openHttpServer();
 
@@ -60,19 +77,7 @@ class Application {
       });
     }
 
-    this.eventEmitter.on('AFTER_ADD_APPLICATION', () => this.afterAdd());
-
-    this.eventEmitter.on('DELETE_APPLICATION', () => {
-      if (typeof window === 'undefined') {
-        this.httpServer.closeHttpServer();
-      }
-
-      this.afterDelete();
-
-      this.eventEmitter.emit('AFTER_DELETE_APPLICATION', this.toJson());
-    });
-
-    this.eventEmitter.emit('ADD_APPLICATION', this.toJson());
+    this.eventEmitter.emit('AFTER_OPEN_APPLICATION', this.toJson());
   }
 
   toJson() {
