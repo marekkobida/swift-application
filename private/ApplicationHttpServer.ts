@@ -11,6 +11,8 @@ class ApplicationHttpServer {
   private readonly sockets: Set<net.Socket> = new Set();
 
   closeHttpServer(): http.Server {
+    console.log('ApplicationHttpServer.closeHttpServer');
+
     if (this.httpServer) {
       this.httpServer.close();
 
@@ -39,6 +41,8 @@ class ApplicationHttpServer {
   }
 
   openHttpServer(): http.Server {
+    console.log('ApplicationHttpServer.openHttpServer');
+
     const httpServer = http.createServer();
 
     httpServer.on('connection', socket => {
@@ -55,6 +59,8 @@ class ApplicationHttpServer {
   }
 
   url(): string | undefined {
+    console.log('ApplicationHttpServer.url');
+
     if (this.httpServer) {
       const httpServerAddress = this.httpServer.address();
 
