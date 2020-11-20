@@ -2,9 +2,9 @@
 import events from 'events';
 import Application from './Application';
 interface Events {
-    ADD_APPLICATION: (application: ReturnType<Application['toJSON']>) => void;
+    ADD_APPLICATION: (application: ReturnType<Application['toJson']>) => void;
     AFTER_ADD_APPLICATION: () => void;
-    AFTER_DELETE_APPLICATION: (application: ReturnType<Application['toJSON']>) => void;
+    AFTER_DELETE_APPLICATION: (application: ReturnType<Application['toJson']>) => void;
     DELETE_APPLICATION: () => void;
 }
 declare interface ApplicationEventEmitter {

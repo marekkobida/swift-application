@@ -9,14 +9,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = __importDefault(require("http"));
 class ApplicationHttpServer {
     constructor() {
-        this.httpServerSockets = new Set();
+        this.sockets = new Set();
     }
     closeHttpServer() {
         if (this.httpServer) {
             this.httpServer.close();
-            this.httpServerSockets.forEach(socket => {
+            this.sockets.forEach(socket => {
                 socket.destroy();
-                this.httpServerSockets.delete(socket);
+                this.sockets.delete(socket);
             });
             return this.httpServer;
         }
@@ -30,8 +30,8 @@ class ApplicationHttpServer {
     openHttpServer() {
         const httpServer = http_1.default.createServer();
         httpServer.on('connection', socket => {
-            this.httpServerSockets.add(socket);
-            httpServer.once('close', () => this.httpServerSockets.delete(socket));
+            this.sockets.add(socket);
+            httpServer.once('close', () => this.sockets.delete(socket));
         });
         httpServer.listen();
         this.httpServer = httpServer;

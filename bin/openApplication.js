@@ -25,24 +25,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
-const ApplicationEventEmitter_1 = __importDefault(require("./ApplicationEventEmitter"));
-const Compiler_1 = __importDefault(require("./webpack/Compiler"));
-const applicationEventEmitter = new ApplicationEventEmitter_1.default();
-process.on('message', message => {
-    if (message.name === 'AFTER_ADD') {
-        applicationEventEmitter.emit('AFTER_ADD_APPLICATION');
-    }
-    if (message.name === 'DELETE') {
-        applicationEventEmitter.emit('DELETE_APPLICATION');
-    }
-});
-applicationEventEmitter.on('ADD_APPLICATION', application => process.send?.({ application, name: 'ADD' }));
-applicationEventEmitter.on('AFTER_DELETE_APPLICATION', application => process.send?.({ application, name: 'AFTER_DELETE' }));
+const Compiler_1 = __importDefault(require("../private/webpack/Compiler"));
 async function openApplication(applicationPath) {
     try {
-        const Application = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
-        if (typeof Application.default === 'function') {
-            new Application.default().open(applicationEventEmitter);
+        const application = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
+        if (typeof application.default === 'function') {
+            const test = new application.default();
+            process.on('message', message => {
+                if (message.name === 'AFTER_ADD_APPLICATION') {
+                    test.eventEmitter.emit('AFTER_ADD_APPLICATION');
+                }
+                if (message.name === 'DELETE_APPLICATION') {
+                    test.eventEmitter.emit('DELETE_APPLICATION');
+                }
+            });
+            test.eventEmitter.on('ADD_APPLICATION', application => process.send?.({ application, name: 'ADD_APPLICATION' }));
+            test.eventEmitter.on('AFTER_DELETE_APPLICATION', application => process.send?.({ application, name: 'AFTER_DELETE_APPLICATION' }));
+            test.open();
         }
     }
     catch (error) {
