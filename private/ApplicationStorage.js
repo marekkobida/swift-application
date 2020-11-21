@@ -18,16 +18,18 @@ class ApplicationStorage {
         const test = child_process_1.default.fork('./node_modules/.bin/open-application', [
             path,
         ]);
-        test.on('message', message => {
-            if (message[0] === 'AFTER_ADD_APPLICATION') {
-                this.applicationStorage.set(path, { application: message[1], test });
+        test.on('message', ([event, application]) => {
+            if (event === 'ADD_APPLICATION_TO_STORAGE') {
+                this.applicationStorage.set(path, { application, test });
             }
-            if (message[0] === 'AFTER_CLOSE_APPLICATION') {
+            if (event === 'AFTER_CLOSE_APPLICATION') {
+                this.applicationStorage.set(path, { application, test });
             }
-            if (message[0] === 'AFTER_DELETE_APPLICATION') {
+            if (event === 'AFTER_DELETE_APPLICATION') {
                 this.applicationStorage.delete(path);
             }
-            if (message[0] === 'AFTER_OPEN_APPLICATION') {
+            if (event === 'AFTER_OPEN_APPLICATION') {
+                this.applicationStorage.set(path, { application, test });
             }
         });
         return this.toJson();

@@ -6,9 +6,7 @@ declare class Application {
     readonly version: string;
     readonly eventEmitter: ApplicationEventEmitter;
     readonly httpServer: ApplicationHttpServer;
-    isTest: boolean;
     constructor(description: string, name: string, version: string);
-    add(): void;
     close(): void;
     delete(): void;
     open(): void;

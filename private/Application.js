@@ -26,16 +26,6 @@ class Application {
         this.version = version;
         this.eventEmitter = new ApplicationEventEmitter_1.default();
         this.httpServer = new ApplicationHttpServer_1.default();
-        this.isTest = false;
-        setInterval(() => {
-            if (this.isTest) {
-                console.log('vypol si ma vynútene');
-                process.exit();
-            }
-        }, 1000);
-    }
-    add() {
-        this.eventEmitter.emit('AFTER_ADD_APPLICATION', this.toJson());
     }
     close() {
         if (typeof window === 'undefined') {
@@ -46,7 +36,6 @@ class Application {
     delete() {
         this.close();
         this.eventEmitter.emit('AFTER_DELETE_APPLICATION', this.toJson());
-        this.isTest = true;
     }
     open() {
         if (typeof window === 'undefined') {

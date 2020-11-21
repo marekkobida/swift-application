@@ -32,9 +32,6 @@ async function openApplication(applicationPath) {
         if (typeof application.default === 'function') {
             const test = new application.default();
             process.on('message', ([event]) => {
-                if (event === 'ADD_APPLICATION') {
-                    test.add();
-                }
                 if (event === 'CLOSE_APPLICATION') {
                     test.close();
                 }
@@ -46,13 +43,12 @@ async function openApplication(applicationPath) {
                 }
             });
             const events = [
-                'AFTER_ADD_APPLICATION',
                 'AFTER_CLOSE_APPLICATION',
                 'AFTER_DELETE_APPLICATION',
                 'AFTER_OPEN_APPLICATION',
             ];
             events.forEach(event => test.eventEmitter.on(event, (...parameters) => process.send?.([event, ...parameters])));
-            test.add();
+            process.send?.(['ADD_APPLICATION_TO_STORAGE', test.toJson()]);
         }
     }
     catch (error) {
