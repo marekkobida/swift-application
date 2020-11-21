@@ -7,9 +7,6 @@ import events from 'events';
 import Application from './Application';
 
 interface Events {
-  AFTER_ADD_APPLICATION: (
-    application: ReturnType<Application['toJson']>
-  ) => void;
   AFTER_CLOSE_APPLICATION: (
     application: ReturnType<Application['toJson']>
   ) => void;

@@ -26,24 +26,11 @@ class Application {
 
   readonly httpServer = new ApplicationHttpServer();
 
-  isTest = false;
-
   constructor(
     readonly description: string,
     readonly name: string,
     readonly version: string
-  ) {
-    setInterval(() => {
-      if (this.isTest) {
-        console.log('vypol si ma vynútene');
-        process.exit();
-      }
-    }, 1000);
-  }
-
-  add() {
-    this.eventEmitter.emit('AFTER_ADD_APPLICATION', this.toJson());
-  }
+  ) {}
 
   close() {
     if (typeof window === 'undefined') {
@@ -57,8 +44,6 @@ class Application {
     this.close();
 
     this.eventEmitter.emit('AFTER_DELETE_APPLICATION', this.toJson());
-
-    this.isTest = true;
   }
 
   open() {
