@@ -8,40 +8,36 @@ import Compiler from '../private/webpack/Compiler';
 
 async function openApplication(applicationPath: string) {
   try {
-    const application: { default: new () => Application } = await import(
+    const $: { default?: new () => Application } = await import(
       path.resolve(applicationPath, './index.js')
     );
 
-    if (typeof application.default === 'function') {
-      const test = new application.default();
+    if (typeof $.default === 'function') {
+      const application = new $.default();
 
-      process.on('message', ([event]) => {
-        if (event === 'CLOSE_APPLICATION') {
-          test.close();
+      process.on('message', ([event]: [string]) => {
+        if (event === 'CLOSE') {
+          application.close();
         }
 
-        if (event === 'DELETE_APPLICATION') {
-          test.delete();
+        if (event === 'DELETE') {
+          application.delete();
         }
 
-        if (event === 'OPEN_APPLICATION') {
-          test.open();
+        if (event === 'OPEN') {
+          application.open();
         }
       });
 
-      const events = [
-        'AFTER_CLOSE_APPLICATION',
-        'AFTER_DELETE_APPLICATION',
-        'AFTER_OPEN_APPLICATION',
-      ] as const;
+      const events = ['AFTER_CLOSE', 'AFTER_DELETE', 'AFTER_OPEN'] as const;
 
       events.forEach(event =>
-        test.eventEmitter.on(event, (...parameters) =>
+        application.eventEmitter.on(event, (...parameters) =>
           process.send?.([event, ...parameters])
         )
       );
 
-      process.send?.(['ADD_APPLICATION_TO_STORAGE', test.toJson()]);
+      process.send?.(['HANDSHAKE', application.toJson()]);
     }
   } catch (error) {
     console.log(applicationPath, error);

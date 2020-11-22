@@ -24,23 +24,26 @@ class ApplicationStorage {
       path,
     ]);
 
-    test.on('message', ([event, application]) => {
-      if (event === 'ADD_APPLICATION_TO_STORAGE') {
-        this.applicationStorage.set(path, { application, test });
-      }
+    test.on(
+      'message',
+      ([event, application]: [string, ReturnType<Application['toJson']>]) => {
+        if (event === 'AFTER_CLOSE') {
+          this.applicationStorage.set(path, { application, test });
+        }
 
-      if (event === 'AFTER_CLOSE_APPLICATION') {
-        this.applicationStorage.set(path, { application, test });
-      }
+        if (event === 'AFTER_DELETE') {
+          this.applicationStorage.delete(path);
+        }
 
-      if (event === 'AFTER_DELETE_APPLICATION') {
-        this.applicationStorage.delete(path);
-      }
+        if (event === 'AFTER_OPEN') {
+          this.applicationStorage.set(path, { application, test });
+        }
 
-      if (event === 'AFTER_OPEN_APPLICATION') {
-        this.applicationStorage.set(path, { application, test });
+        if (event === 'HANDSHAKE') {
+          this.applicationStorage.set(path, { application, test });
+        }
       }
-    });
+    );
 
     return this.toJson();
   }
@@ -49,7 +52,7 @@ class ApplicationStorage {
     const application = this.applicationStorage.get(path);
 
     if (application) {
-      application.test.send(['CLOSE_APPLICATION']);
+      application.test.send(['CLOSE']);
     }
 
     return this.toJson();
@@ -59,7 +62,7 @@ class ApplicationStorage {
     const application = this.applicationStorage.get(path);
 
     if (application) {
-      application.test.send(['DELETE_APPLICATION']);
+      application.test.send(['DELETE']);
     }
 
     return this.toJson();
@@ -67,7 +70,7 @@ class ApplicationStorage {
 
   deleteApplications(): ReturnType<ApplicationStorage['toJson']> {
     this.applicationStorage.forEach(application =>
-      application.test.send(['DELETE_APPLICATION'])
+      application.test.send(['DELETE'])
     );
 
     return this.toJson();
@@ -77,18 +80,27 @@ class ApplicationStorage {
     const application = this.applicationStorage.get(path);
 
     if (application) {
-      application.test.send(['OPEN_APPLICATION']);
+      application.test.send(['OPEN']);
     }
 
     return this.toJson();
+  }
+
+  readApplication(path: string): ReturnType<ApplicationStorage['toJson']> {
+    return this.toJson(
+      new Map([...this.applicationStorage].filter($ => $[0] === path))
+    );
   }
 
   readApplications(): ReturnType<ApplicationStorage['toJson']> {
     return this.toJson();
   }
 
-  toJson(): [string, ReturnType<Application['toJson']>][] {
-    return [...this.applicationStorage].map(([path, { application }]) => [
+  toJson(
+    applicationStorage: ApplicationStorage['applicationStorage'] = this
+      .applicationStorage
+  ): [string, ReturnType<Application['toJson']>][] {
+    return [...applicationStorage].map(([path, { application }]) => [
       path,
       application,
     ]);

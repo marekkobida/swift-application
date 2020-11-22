@@ -13,7 +13,7 @@ const ApplicationStorageHttpServer = (applicationStorage: ApplicationStorage) =>
 
     response.setHeader('Content-Type', 'application/json');
 
-    /* ---------------------------------------------------------------- */
+    /* */
 
     const requestedUrl = new URL(request.url as string, 'file://');
 
@@ -92,18 +92,28 @@ const ApplicationStorageHttpServer = (applicationStorage: ApplicationStorage) =>
       }
     }
 
-    /* read applications */
+    /* read application(s) */
 
     if (
       request.method === 'GET' &&
       requestedUrl.pathname === '/application-storage'
     ) {
+      if (pathFromRequestedUrlSearchParameters) {
+        return response.end(
+          JSON.stringify(
+            applicationStorage.readApplication(
+              pathFromRequestedUrlSearchParameters
+            )
+          )
+        );
+      }
+
       return response.end(
         JSON.stringify(applicationStorage.readApplications())
       );
     }
 
-    /* ---------------------------------------------------------------- */
+    /* */
 
     return response.end(
       JSON.stringify(
