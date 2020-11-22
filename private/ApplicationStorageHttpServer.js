@@ -11,7 +11,7 @@ const ApplicationStorageHttpServer = (applicationStorage) => http_1.default.crea
     response.setHeader('Access-Control-Allow-Methods', '*');
     response.setHeader('Access-Control-Allow-Origin', '*');
     response.setHeader('Content-Type', 'application/json');
-    /* ---------------------------------------------------------------- */
+    /* */
     const requestedUrl = new URL(request.url, 'file://');
     const pathFromRequestedUrlSearchParameters = requestedUrl.searchParams.get('path');
     /* add application */
@@ -42,12 +42,15 @@ const ApplicationStorageHttpServer = (applicationStorage) => http_1.default.crea
             return response.end(JSON.stringify(applicationStorage.openApplication(pathFromRequestedUrlSearchParameters)));
         }
     }
-    /* read applications */
+    /* read application(s) */
     if (request.method === 'GET' &&
         requestedUrl.pathname === '/application-storage') {
+        if (pathFromRequestedUrlSearchParameters) {
+            return response.end(JSON.stringify(applicationStorage.readApplication(pathFromRequestedUrlSearchParameters)));
+        }
         return response.end(JSON.stringify(applicationStorage.readApplications()));
     }
-    /* ---------------------------------------------------------------- */
+    /* */
     return response.end(JSON.stringify(`The requested URL "${requestedUrl.toString()}" is not valid.`));
 });
 exports.default = ApplicationStorageHttpServer;

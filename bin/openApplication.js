@@ -28,27 +28,23 @@ const path_1 = __importDefault(require("path"));
 const Compiler_1 = __importDefault(require("../private/webpack/Compiler"));
 async function openApplication(applicationPath) {
     try {
-        const application = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
-        if (typeof application.default === 'function') {
-            const test = new application.default();
+        const $ = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(applicationPath, './index.js'))));
+        if (typeof $.default === 'function') {
+            const application = new $.default();
             process.on('message', ([event]) => {
-                if (event === 'CLOSE_APPLICATION') {
-                    test.close();
+                if (event === 'CLOSE') {
+                    application.close();
                 }
-                if (event === 'DELETE_APPLICATION') {
-                    test.delete();
+                if (event === 'DELETE') {
+                    application.delete();
                 }
-                if (event === 'OPEN_APPLICATION') {
-                    test.open();
+                if (event === 'OPEN') {
+                    application.open();
                 }
             });
-            const events = [
-                'AFTER_CLOSE_APPLICATION',
-                'AFTER_DELETE_APPLICATION',
-                'AFTER_OPEN_APPLICATION',
-            ];
-            events.forEach(event => test.eventEmitter.on(event, (...parameters) => process.send?.([event, ...parameters])));
-            process.send?.(['ADD_APPLICATION_TO_STORAGE', test.toJson()]);
+            const events = ['AFTER_CLOSE', 'AFTER_DELETE', 'AFTER_OPEN'];
+            events.forEach(event => application.eventEmitter.on(event, (...parameters) => process.send?.([event, ...parameters])));
+            process.send?.(['HANDSHAKE', application.toJson()]);
         }
     }
     catch (error) {

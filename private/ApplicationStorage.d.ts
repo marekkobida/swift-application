@@ -11,7 +11,8 @@ declare class ApplicationStorage {
     deleteApplication(path: string): ReturnType<ApplicationStorage['toJson']>;
     deleteApplications(): ReturnType<ApplicationStorage['toJson']>;
     openApplication(path: string): ReturnType<ApplicationStorage['toJson']>;
+    readApplication(path: string): ReturnType<ApplicationStorage['toJson']>;
     readApplications(): ReturnType<ApplicationStorage['toJson']>;
-    toJson(): [string, ReturnType<Application['toJson']>][];
+    toJson(applicationStorage?: ApplicationStorage['applicationStorage']): [string, ReturnType<Application['toJson']>][];
 }
 export default ApplicationStorage;

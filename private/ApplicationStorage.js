@@ -19,16 +19,16 @@ class ApplicationStorage {
             path,
         ]);
         test.on('message', ([event, application]) => {
-            if (event === 'ADD_APPLICATION_TO_STORAGE') {
+            if (event === 'AFTER_CLOSE') {
                 this.applicationStorage.set(path, { application, test });
             }
-            if (event === 'AFTER_CLOSE_APPLICATION') {
-                this.applicationStorage.set(path, { application, test });
-            }
-            if (event === 'AFTER_DELETE_APPLICATION') {
+            if (event === 'AFTER_DELETE') {
                 this.applicationStorage.delete(path);
             }
-            if (event === 'AFTER_OPEN_APPLICATION') {
+            if (event === 'AFTER_OPEN') {
+                this.applicationStorage.set(path, { application, test });
+            }
+            if (event === 'HANDSHAKE') {
                 this.applicationStorage.set(path, { application, test });
             }
         });
@@ -37,33 +37,37 @@ class ApplicationStorage {
     closeApplication(path) {
         const application = this.applicationStorage.get(path);
         if (application) {
-            application.test.send(['CLOSE_APPLICATION']);
+            application.test.send(['CLOSE']);
         }
         return this.toJson();
     }
     deleteApplication(path) {
         const application = this.applicationStorage.get(path);
         if (application) {
-            application.test.send(['DELETE_APPLICATION']);
+            application.test.send(['DELETE']);
         }
         return this.toJson();
     }
     deleteApplications() {
-        this.applicationStorage.forEach(application => application.test.send(['DELETE_APPLICATION']));
+        this.applicationStorage.forEach(application => application.test.send(['DELETE']));
         return this.toJson();
     }
     openApplication(path) {
         const application = this.applicationStorage.get(path);
         if (application) {
-            application.test.send(['OPEN_APPLICATION']);
+            application.test.send(['OPEN']);
         }
         return this.toJson();
+    }
+    readApplication(path) {
+        return this.toJson(new Map([...this.applicationStorage].filter($ => $[0] === path)));
     }
     readApplications() {
         return this.toJson();
     }
-    toJson() {
-        return [...this.applicationStorage].map(([path, { application }]) => [
+    toJson(applicationStorage = this
+        .applicationStorage) {
+        return [...applicationStorage].map(([path, { application }]) => [
             path,
             application,
         ]);

@@ -31,11 +31,11 @@ class Application {
         if (typeof window === 'undefined') {
             this.httpServer.closeHttpServer();
         }
-        this.eventEmitter.emit('AFTER_CLOSE_APPLICATION', this.toJson());
+        this.eventEmitter.emit('AFTER_CLOSE', this.toJson());
     }
     delete() {
         this.close();
-        this.eventEmitter.emit('AFTER_DELETE_APPLICATION', this.toJson());
+        this.eventEmitter.emit('AFTER_DELETE', this.toJson());
     }
     open() {
         if (typeof window === 'undefined') {
@@ -49,7 +49,7 @@ class Application {
                 }
             });
         }
-        this.eventEmitter.emit('AFTER_OPEN_APPLICATION', this.toJson());
+        this.eventEmitter.emit('AFTER_OPEN', this.toJson());
     }
     toJson() {
         return {
