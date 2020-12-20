@@ -16,15 +16,17 @@ class Compiler {
             const configuration = configurationStorage.resolve(inputPaths, outputPath);
             const compiler = webpack_1.default(configuration);
             compiler.run((error, compilation) => {
-                console.log(compilation?.toString({ colors: true }));
-                afterCompilation(compilation?.toJson());
+                if (compilation) {
+                    console.log(compilation.toString({ colors: true }));
+                    afterCompilation(compilation.toJson());
+                }
             });
         });
     }
     compileApplications(inputPaths, outputPath, configurationStorage = new ConfigurationStorage_1.default()) {
         configurationStorage
-            .add(applicationClientConfiguration_1.default)
-            .add(applicationConfiguration_1.default);
+            .addConfiguration(applicationClientConfiguration_1.default)
+            .addConfiguration(applicationConfiguration_1.default);
         return this.compile(inputPaths, outputPath, configurationStorage);
     }
 }

@@ -15,9 +15,7 @@ class ApplicationStorage {
         if (this.applicationStorage.has(path)) {
             return this.toJson();
         }
-        const test = child_process_1.default.fork('./node_modules/.bin/open-application', [
-            path,
-        ]);
+        const test = child_process_1.default.fork('./node_modules/.bin/compile-and-open-application', [path]);
         test.on('message', ([event, application]) => {
             if (event === 'AFTER_CLOSE') {
                 this.applicationStorage.set(path, { application, test });

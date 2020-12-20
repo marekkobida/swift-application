@@ -9,16 +9,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const ApplicationEventEmitter_1 = __importDefault(require("./ApplicationEventEmitter"));
 const ApplicationHttpServer_1 = __importDefault(require("./ApplicationHttpServer"));
-const currentPath = (() => {
-    if (typeof window === 'undefined') {
-        return new URL(path_1.default.join(__dirname), 'file://').toString();
-    }
-    const scripts = document.getElementsByTagName('script');
-    if (scripts.length > 0) {
-        const { src } = scripts[scripts.length - 1];
-        return src.substring(0, src.lastIndexOf('/'));
-    }
-})();
 class Application {
     constructor(description, name, version) {
         this.description = description;
@@ -28,9 +18,7 @@ class Application {
         this.httpServer = new ApplicationHttpServer_1.default();
     }
     close() {
-        if (typeof window === 'undefined') {
-            this.httpServer.closeHttpServer();
-        }
+        this.httpServer.closeHttpServer();
         this.eventEmitter.emit('AFTER_CLOSE', this.toJson());
     }
     delete() {
@@ -38,17 +26,15 @@ class Application {
         this.eventEmitter.emit('AFTER_DELETE', this.toJson());
     }
     open() {
-        if (typeof window === 'undefined') {
-            this.httpServer.openHttpServer();
-            this.httpServer.on('request', (request, response) => {
-                response.setHeader('Access-Control-Allow-Methods', '*');
-                response.setHeader('Access-Control-Allow-Origin', '*');
-                if (request.url === '/about') {
-                    response.setHeader('Content-Type', 'application/json');
-                    response.end(JSON.stringify(this.toJson()));
-                }
-            });
-        }
+        this.httpServer.openHttpServer();
+        this.httpServer.on('request', (request, response) => {
+            response.setHeader('Access-Control-Allow-Methods', '*');
+            response.setHeader('Access-Control-Allow-Origin', '*');
+            if (request.url === '/about') {
+                response.setHeader('Content-Type', 'application/json');
+                response.end(JSON.stringify(this.toJson()));
+            }
+        });
         this.eventEmitter.emit('AFTER_OPEN', this.toJson());
     }
     toJson() {
@@ -56,7 +42,7 @@ class Application {
             description: this.description,
             httpServerUrl: this.httpServer.url(),
             name: this.name,
-            path: currentPath,
+            path: new URL(path_1.default.join(__dirname), 'file://').toString(),
             version: this.version,
         };
     }

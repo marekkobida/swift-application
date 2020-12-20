@@ -7,7 +7,7 @@ class ConfigurationStorage {
     constructor(configurationStorage = new Set()) {
         this.configurationStorage = configurationStorage;
     }
-    add(configuration) {
+    addConfiguration(configuration) {
         this.configurationStorage.add(configuration);
         return this;
     }
