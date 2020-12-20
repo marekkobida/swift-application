@@ -20,9 +20,10 @@ class ApplicationStorage {
       return this.toJson();
     }
 
-    const test = child_process.fork('./node_modules/.bin/open-application', [
-      path,
-    ]);
+    const test = child_process.fork(
+      './node_modules/.bin/compile-and-open-application',
+      [path]
+    );
 
     test.on(
       'message',

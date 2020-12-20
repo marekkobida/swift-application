@@ -1,7 +1,7 @@
 {
   "bin": {
-    "open-application": "public/bin/openApplication.js",
-    "swift": "public/bin/swift.js"
+    "compile-and-open-application": "public/bin/compileAndOpenApplication.js",
+    "compile-applications": "public/bin/compileApplications.js"
   },
   "dependencies": {
     "@babel/core": "*",
@@ -12,6 +12,8 @@
     "@types/react": "*",
     "@types/react-dom": "*",
     "babel-loader": "*",
+    "fp-ts": "*",
+    "io-ts": "*",
     "react": "*",
     "react-dom": "*",
     "webpack": "*"

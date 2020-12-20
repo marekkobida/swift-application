@@ -23,9 +23,11 @@ class Compiler {
       const compiler = webpack(configuration);
 
       compiler.run((error, compilation) => {
-        console.log(compilation?.toString({ colors: true }));
+        if (compilation) {
+          console.log(compilation.toString({ colors: true }));
 
-        afterCompilation(compilation?.toJson());
+          afterCompilation(compilation.toJson());
+        }
       });
     });
   }
@@ -36,8 +38,8 @@ class Compiler {
     configurationStorage: ConfigurationStorage = new ConfigurationStorage()
   ) {
     configurationStorage
-      .add(applicationClientConfiguration)
-      .add(applicationConfiguration);
+      .addConfiguration(applicationClientConfiguration)
+      .addConfiguration(applicationConfiguration);
 
     return this.compile(inputPaths, outputPath, configurationStorage);
   }

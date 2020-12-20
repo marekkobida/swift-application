@@ -6,7 +6,7 @@ import path from 'path';
 import Application from '../private/Application';
 import Compiler from '../private/webpack/Compiler';
 
-async function openApplication(applicationPath: string) {
+async function compileAndOpenApplication(applicationPath: string) {
   try {
     const $: { default?: new () => Application } = await import(
       path.resolve(applicationPath, './index.js')
@@ -53,10 +53,10 @@ async function openApplication(applicationPath: string) {
       os.tmpdir()
     );
 
-    await openApplication(outputPath || applicationPath);
+    await compileAndOpenApplication(outputPath || applicationPath);
 
     return;
   }
 
-  await openApplication(applicationPath);
+  await compileAndOpenApplication(applicationPath);
 })(process.argv[2]);

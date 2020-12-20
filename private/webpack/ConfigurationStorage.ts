@@ -12,7 +12,7 @@ type Configuration = (
 class ConfigurationStorage {
   constructor(private configurationStorage: Set<Configuration> = new Set()) {}
 
-  add(configuration: Configuration): this {
+  addConfiguration(configuration: Configuration): this {
     this.configurationStorage.add(configuration);
 
     return this;

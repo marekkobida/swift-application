@@ -11,7 +11,6 @@ function applicationConfiguration(
 ): webpack.Configuration {
   return {
     entry: path.resolve(inputPath, './index.ts'),
-    externals: ['http', 'net', 'path'],
     mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
     module: {
       rules: [
@@ -26,16 +25,8 @@ function applicationConfiguration(
       ],
     },
     name: 'application',
-    node: {
-      __dirname: false,
-    },
     output: {
       filename: 'index.js',
-      globalObject: 'this',
-      library: {
-        name: ['applications', path.basename(inputPath)],
-        type: 'umd',
-      },
       path: path.resolve(
         outputPath,
         './applications',
