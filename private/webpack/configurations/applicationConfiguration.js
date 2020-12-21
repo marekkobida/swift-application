@@ -31,6 +31,7 @@ function applicationConfiguration(inputPath, outputPath) {
         resolve: {
             extensions: ['.js', '.ts'],
         },
+        target: 'node',
     };
 }
 exports.default = applicationConfiguration;
