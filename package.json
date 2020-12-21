@@ -1,7 +1,7 @@
 {
   "bin": {
-    "compile-and-open-application": "bin/compileAndOpenApplication.js",
-    "compile-applications": "bin/compileApplications.js"
+    "compile-and-open-application": "./bin/compileAndOpenApplication.js",
+    "compile-applications": "./bin/compileApplications.js"
   },
   "dependencies": {
     "@babel/core": "*",
