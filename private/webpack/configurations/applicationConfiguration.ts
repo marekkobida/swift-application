@@ -36,6 +36,7 @@ function applicationConfiguration(
     resolve: {
       extensions: ['.js', '.ts'],
     },
+    target: 'node',
   };
 }
 
