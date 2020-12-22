@@ -3,7 +3,6 @@
  */
 
 import Application from './Application';
-import Compiler from './webpack/Compiler';
 
 class ApplicationStorage {
   applicationStorage: Map<string, Application> = new Map();
@@ -15,15 +14,8 @@ class ApplicationStorage {
       return this.toJson();
     }
 
-    const {
-      children: [{ outputPath }],
-    } = await new Compiler().compileApplications(
-      [path],
-      '/Users/marekkobida/Documents/test'
-    );
-
     const $: { default?: new () => Application } = await import(
-      `${outputPath}/index.js`
+      `${path}/index.js`
     );
 
     if (typeof $.default === 'function') {

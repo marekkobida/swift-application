@@ -16,20 +16,14 @@ class Application {
   ) {}
 
   close() {
-    console.log('Application.close');
-
     this.httpServer.closeHttpServer();
   }
 
   delete() {
-    console.log('Application.delete');
-
     this.close();
   }
 
   open() {
-    console.log('Application.open');
-
     this.httpServer.openHttpServer();
 
     this.httpServer.on('request', (request, response) => {
@@ -44,8 +38,6 @@ class Application {
   }
 
   toJson() {
-    console.log('Application.toJson');
-
     return {
       description: this.description,
       httpServerUrl: this.httpServer.url(),
