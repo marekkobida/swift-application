@@ -15,12 +15,12 @@ class Compiler {
     configurationStorage: ConfigurationStorage = new ConfigurationStorage()
   ): Promise<{ children: { outputPath?: string }[] }> {
     return new Promise(afterCompilation => {
-      const configuration = configurationStorage.resolve(
+      const configurations = configurationStorage.resolve(
         inputPaths,
         outputPath
       );
 
-      const compiler = webpack(configuration);
+      const compiler = webpack(configurations);
 
       compiler.run((error, compilation) => {
         if (compilation) {

@@ -21,5 +21,8 @@
   },
   "name": "@swift/application",
   "private": true,
+  "scripts": {
+    "t": "prettier ./private && tsc"
+  },
   "version": "2.0.0"
 }
