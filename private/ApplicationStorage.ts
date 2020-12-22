@@ -2,49 +2,35 @@
  * Copyright 2020 Marek Kobida
  */
 
-import child_process from 'child_process';
-
 import Application from './Application';
+import Compiler from './webpack/Compiler';
 
 class ApplicationStorage {
-  applicationStorage: Map<
-    string,
-    {
-      application: ReturnType<Application['toJson']>;
-      test: child_process.ChildProcess;
-    }
-  > = new Map();
+  applicationStorage: Map<string, Application> = new Map();
 
-  addApplication(path: string): ReturnType<ApplicationStorage['toJson']> {
+  async addApplication(
+    path: string
+  ): Promise<ReturnType<ApplicationStorage['toJson']>> {
     if (this.applicationStorage.has(path)) {
       return this.toJson();
     }
 
-    const test = child_process.fork(
-      './node_modules/.bin/compile-and-open-application',
-      [path]
+    const {
+      children: [{ outputPath }],
+    } = await new Compiler().compileApplications(
+      [path],
+      '/Users/marekkobida/Documents/test'
     );
 
-    test.on(
-      'message',
-      ([event, application]: [string, ReturnType<Application['toJson']>]) => {
-        if (event === 'AFTER_CLOSE') {
-          this.applicationStorage.set(path, { application, test });
-        }
-
-        if (event === 'AFTER_DELETE') {
-          this.applicationStorage.delete(path);
-        }
-
-        if (event === 'AFTER_OPEN') {
-          this.applicationStorage.set(path, { application, test });
-        }
-
-        if (event === 'HANDSHAKE') {
-          this.applicationStorage.set(path, { application, test });
-        }
-      }
+    const $: { default?: new () => Application } = await import(
+      `${outputPath}/index.js`
     );
+
+    if (typeof $.default === 'function') {
+      const application = new $.default();
+
+      this.applicationStorage.set(path, application);
+    }
 
     return this.toJson();
   }
@@ -53,7 +39,7 @@ class ApplicationStorage {
     const application = this.applicationStorage.get(path);
 
     if (application) {
-      application.test.send(['CLOSE']);
+      application.close();
     }
 
     return this.toJson();
@@ -63,16 +49,14 @@ class ApplicationStorage {
     const application = this.applicationStorage.get(path);
 
     if (application) {
-      application.test.send(['DELETE']);
+      application.delete();
     }
 
     return this.toJson();
   }
 
   deleteApplications(): ReturnType<ApplicationStorage['toJson']> {
-    this.applicationStorage.forEach(application =>
-      application.test.send(['DELETE'])
-    );
+    this.applicationStorage.forEach(application => application.delete());
 
     return this.toJson();
   }
@@ -81,7 +65,7 @@ class ApplicationStorage {
     const application = this.applicationStorage.get(path);
 
     if (application) {
-      application.test.send(['OPEN']);
+      application.open();
     }
 
     return this.toJson();
@@ -101,9 +85,9 @@ class ApplicationStorage {
     applicationStorage: ApplicationStorage['applicationStorage'] = this
       .applicationStorage
   ): [string, ReturnType<Application['toJson']>][] {
-    return [...applicationStorage].map(([path, { application }]) => [
+    return [...applicationStorage].map(([path, application]) => [
       path,
-      application,
+      application.toJson(),
     ]);
   }
 }

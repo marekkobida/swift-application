@@ -14,10 +14,7 @@ function applicationClientConfiguration(
     mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
     module: {
       rules: [
-        {
-          test: /\.(css|html)$/,
-          type: 'asset/resource',
-        },
+        { test: /\.(css|html)$/, type: 'asset/resource' },
         {
           loader: 'babel-loader',
           options: {
@@ -38,9 +35,7 @@ function applicationClientConfiguration(
         path.basename(inputPath)
       ),
     },
-    resolve: {
-      extensions: ['.js', '.ts', '.tsx'],
-    },
+    resolve: { extensions: ['.js', '.ts', '.tsx'] },
   };
 }
 

@@ -1,6 +1,5 @@
 {
   "bin": {
-    "compile-and-open-application": "./public/bin/compileAndOpenApplication.js",
     "compile-applications": "./public/bin/compileApplications.js"
   },
   "dependencies": {
@@ -12,8 +11,6 @@
     "@types/react": "*",
     "@types/react-dom": "*",
     "babel-loader": "*",
-    "fp-ts": "*",
-    "io-ts": "*",
     "react": "*",
     "react-dom": "*",
     "webpack": "*"
@@ -24,5 +21,5 @@
   },
   "name": "@swift/application",
   "private": true,
-  "version": "1.0.0"
+  "version": "2.0.0"
 }

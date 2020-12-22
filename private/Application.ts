@@ -4,12 +4,9 @@
 
 import path from 'path';
 
-import ApplicationEventEmitter from './ApplicationEventEmitter';
 import ApplicationHttpServer from './ApplicationHttpServer';
 
 class Application {
-  readonly eventEmitter = new ApplicationEventEmitter();
-
   readonly httpServer = new ApplicationHttpServer();
 
   constructor(
@@ -19,18 +16,20 @@ class Application {
   ) {}
 
   close() {
-    this.httpServer.closeHttpServer();
+    console.log('Application.close');
 
-    this.eventEmitter.emit('AFTER_CLOSE', this.toJson());
+    this.httpServer.closeHttpServer();
   }
 
   delete() {
-    this.close();
+    console.log('Application.delete');
 
-    this.eventEmitter.emit('AFTER_DELETE', this.toJson());
+    this.close();
   }
 
   open() {
+    console.log('Application.open');
+
     this.httpServer.openHttpServer();
 
     this.httpServer.on('request', (request, response) => {
@@ -39,15 +38,14 @@ class Application {
 
       if (request.url === '/about') {
         response.setHeader('Content-Type', 'application/json');
-
         response.end(JSON.stringify(this.toJson()));
       }
     });
-
-    this.eventEmitter.emit('AFTER_OPEN', this.toJson());
   }
 
   toJson() {
+    console.log('Application.toJson');
+
     return {
       description: this.description,
       httpServerUrl: this.httpServer.url(),
