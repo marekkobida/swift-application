@@ -2,8 +2,6 @@
  * Copyright 2020 Marek Kobida
  */
 
-import path from 'path';
-
 import ApplicationHttpServer from './ApplicationHttpServer';
 
 class Application {
@@ -32,6 +30,7 @@ class Application {
 
       if (request.url === '/about') {
         response.setHeader('Content-Type', 'application/json');
+
         response.end(JSON.stringify(this.toJson()));
       }
     });
@@ -42,7 +41,6 @@ class Application {
       description: this.description,
       httpServerUrl: this.httpServer.url(),
       name: this.name,
-      path: new URL(path.join(__dirname), 'file://').toString(),
       version: this.version,
     };
   }

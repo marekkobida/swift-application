@@ -11,23 +11,21 @@ const Compiler = require('./public/private/webpack/Compiler').default;
 const applicationStorage = new ApplicationStorage();
 const compiler = new Compiler();
 
-(async applicationInputPath => {
-  const APPLICATION_OUTPUT_PATH = os.tmpdir();
-
+(async (applicationInputPath, applicationOutputPath = os.tmpdir()) => {
   // 1. Compile application
-
   const {
     children: [{ outputPath }],
   } = await compiler.compileApplications(
     [applicationInputPath],
-    APPLICATION_OUTPUT_PATH
+    applicationOutputPath
   );
 
   // 3. Add application to application storage
-
   await applicationStorage.addApplication(outputPath);
 
   // 4. Open application
-
   applicationStorage.openApplication(outputPath);
-})('/Users/marekkobida/Documents/Movies');
+
+  // 5. Read application
+  console.log(applicationStorage.readApplication(outputPath));
+})(process.argv[2], process.argv[3]);

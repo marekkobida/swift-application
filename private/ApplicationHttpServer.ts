@@ -54,11 +54,9 @@ class ApplicationHttpServer {
 
   url(): string | undefined {
     if (this.httpServer) {
-      const httpServerAddress = this.httpServer.address();
+      const httpServerAddress = this.httpServer.address() as { port: number };
 
-      if (httpServerAddress !== null && typeof httpServerAddress === 'object') {
-        return `http://127.0.0.1:${httpServerAddress.port}`;
-      }
+      return `http://0.0.0.0:${httpServerAddress.port}`;
     }
   }
 }
