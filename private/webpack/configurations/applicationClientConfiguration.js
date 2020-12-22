@@ -13,10 +13,7 @@ function applicationClientConfiguration(inputPath, outputPath) {
         mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
         module: {
             rules: [
-                {
-                    test: /\.(css|html)$/,
-                    type: 'asset/resource',
-                },
+                { test: /\.(css|html)$/, type: 'asset/resource' },
                 {
                     loader: 'babel-loader',
                     options: {
@@ -33,9 +30,7 @@ function applicationClientConfiguration(inputPath, outputPath) {
             filename: 'client.js',
             path: path_1.default.resolve(outputPath, './applications', path_1.default.basename(inputPath)),
         },
-        resolve: {
-            extensions: ['.js', '.ts', '.tsx'],
-        },
+        resolve: { extensions: ['.js', '.ts', '.tsx'] },
     };
 }
 exports.default = applicationClientConfiguration;

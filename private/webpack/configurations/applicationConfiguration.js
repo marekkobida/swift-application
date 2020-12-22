@@ -26,11 +26,10 @@ function applicationConfiguration(inputPath, outputPath) {
         name: 'application',
         output: {
             filename: 'index.js',
+            libraryTarget: 'commonjs',
             path: path_1.default.resolve(outputPath, './applications', path_1.default.basename(inputPath)),
         },
-        resolve: {
-            extensions: ['.js', '.ts'],
-        },
+        resolve: { extensions: ['.js', '.ts'] },
         target: 'node',
     };
 }

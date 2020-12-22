@@ -12,6 +12,7 @@ class ApplicationHttpServer {
         this.sockets = new Set();
     }
     closeHttpServer() {
+        console.log('ApplicationHttpServer.closeHttpServer');
         if (this.httpServer) {
             this.httpServer.close();
             this.sockets.forEach(socket => {
@@ -22,11 +23,13 @@ class ApplicationHttpServer {
         }
     }
     on(event, onRequest) {
+        console.log('ApplicationHttpServer.on');
         if (this.httpServer) {
             this.httpServer.on(event, onRequest);
         }
     }
     openHttpServer() {
+        console.log('ApplicationHttpServer.openHttpServer');
         const httpServer = http_1.default.createServer();
         httpServer.on('connection', socket => {
             this.sockets.add(socket);
@@ -37,6 +40,7 @@ class ApplicationHttpServer {
         return httpServer;
     }
     url() {
+        console.log('ApplicationHttpServer.url');
         if (this.httpServer) {
             const httpServerAddress = this.httpServer.address();
             if (httpServerAddress !== null && typeof httpServerAddress === 'object') {
