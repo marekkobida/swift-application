@@ -6,7 +6,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const path_1 = __importDefault(require("path"));
 const ApplicationHttpServer_1 = __importDefault(require("./ApplicationHttpServer"));
 class Application {
     constructor(description, name, version) {
@@ -37,7 +36,6 @@ class Application {
             description: this.description,
             httpServerUrl: this.httpServer.url(),
             name: this.name,
-            path: new URL(path_1.default.join(__dirname), 'file://').toString(),
             version: this.version,
         };
     }

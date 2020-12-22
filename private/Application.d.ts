@@ -12,7 +12,6 @@ declare class Application {
         description: string;
         httpServerUrl: string | undefined;
         name: string;
-        path: string;
         version: string;
     };
 }
