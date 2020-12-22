@@ -13,8 +13,8 @@ const applicationConfiguration_1 = __importDefault(require("./configurations/app
 class Compiler {
     compile(inputPaths, outputPath, configurationStorage = new ConfigurationStorage_1.default()) {
         return new Promise(afterCompilation => {
-            const configuration = configurationStorage.resolve(inputPaths, outputPath);
-            const compiler = webpack_1.default(configuration);
+            const configurations = configurationStorage.resolve(inputPaths, outputPath);
+            const compiler = webpack_1.default(configurations);
             compiler.run((error, compilation) => {
                 if (compilation) {
                     console.log(compilation.toString({ colors: true }));
