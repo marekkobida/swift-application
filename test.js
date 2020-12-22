@@ -23,9 +23,9 @@ const compiler = new Compiler();
   // 3. Add application to application storage
   await applicationStorage.addApplication(outputPath);
 
-  // 4. Open application
+  // 4. Open application from application storage
   applicationStorage.openApplication(outputPath);
 
-  // 5. Read application
+  // 5. Read application from application storage
   console.log(applicationStorage.readApplication(outputPath));
 })(process.argv[2], process.argv[3]);
