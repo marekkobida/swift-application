@@ -16,15 +16,12 @@ class Application {
         this.httpServer = new ApplicationHttpServer_1.default();
     }
     close() {
-        console.log('Application.close');
         this.httpServer.closeHttpServer();
     }
     delete() {
-        console.log('Application.delete');
         this.close();
     }
     open() {
-        console.log('Application.open');
         this.httpServer.openHttpServer();
         this.httpServer.on('request', (request, response) => {
             response.setHeader('Access-Control-Allow-Methods', '*');
@@ -36,7 +33,6 @@ class Application {
         });
     }
     toJson() {
-        console.log('Application.toJson');
         return {
             description: this.description,
             httpServerUrl: this.httpServer.url(),

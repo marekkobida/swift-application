@@ -21,11 +21,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const Compiler_1 = __importDefault(require("./webpack/Compiler"));
 class ApplicationStorage {
     constructor() {
         this.applicationStorage = new Map();
@@ -34,8 +30,7 @@ class ApplicationStorage {
         if (this.applicationStorage.has(path)) {
             return this.toJson();
         }
-        const { children: [{ outputPath }], } = await new Compiler_1.default().compileApplications([path], '/Users/marekkobida/Documents/test');
-        const $ = await Promise.resolve().then(() => __importStar(require(`${outputPath}/index.js`)));
+        const $ = await Promise.resolve().then(() => __importStar(require(`${path}/index.js`)));
         if (typeof $.default === 'function') {
             const application = new $.default();
             this.applicationStorage.set(path, application);
